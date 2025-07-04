@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   output: 'standalone', // Optimized for deployment
   
   // Increase serverless function timeout
@@ -69,4 +68,5 @@ const nextConfig = {
   },
 };
 
+module.exports = nextConfig;
 module.exports = nextConfig;

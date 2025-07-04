@@ -40,14 +40,13 @@ export async function searchBenefitsContent(
   query: string, 
   clientId: string
 ): Promise<BenefitsDocument[]> {
-  // ...existing code...
-  // Return an empty array or a mock object as needed.
+  // Placeholder implementation, replace with your Azure Search logic
   return [];
 }
 
 // Format an array of result documents into a user-friendly string
 export function formatSearchResultsForPrompt(results: BenefitsDocument[]): string {
-  // ...existing code...
+  // Placeholder implementation, replace with proper formatting
   if (!results || results.length === 0) {
     return "No specific benefits information available.";
   }
