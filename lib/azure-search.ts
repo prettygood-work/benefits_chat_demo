@@ -6,7 +6,7 @@ const searchEndpoint = process.env.AZURE_SEARCH_ENDPOINT;
 const searchKey = process.env.AZURE_SEARCH_KEY;
 const searchIndex = process.env.AZURE_SEARCH_INDEX || 'benefits-index';
 
-let searchClient: SearchClient | null = null;
+let searchClient: SearchClient<BenefitsDocument> | null = null;
 
 // Only initialize if all required environment variables exist
 if (typeof searchEndpoint === 'string' && typeof searchKey === 'string') {
