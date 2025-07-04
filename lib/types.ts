@@ -35,6 +35,7 @@ export type CustomUIDataTypes = {
   imageDelta: string;
   sheetDelta: string;
   codeDelta: string;
+  benefitsDelta: string;
   suggestion: Suggestion;
   appendMessage: string;
   id: string;
@@ -42,6 +43,10 @@ export type CustomUIDataTypes = {
   kind: ArtifactKind;
   clear: null;
   finish: null;
+  'benefits-plans': {
+    plans: Array<any>;
+    userProfile?: any;
+  };
 };
 
 export type ChatMessage = UIMessage<

@@ -19,10 +19,12 @@ export const benefitsArtifact = new Artifact<'benefits', BenefitsArtifactMetadat
   },
   onStreamPart: ({ streamPart, setMetadata }) => {
     if (streamPart.type === 'data-benefits-plans') {
+      // Type assertion for the specific case
+      const benefitsStreamPart = streamPart as any;
       setMetadata((metadata) => ({
         ...metadata,
-        plans: streamPart.data.plans,
-        userProfile: streamPart.data.userProfile,
+        plans: benefitsStreamPart.data?.plans || [],
+        userProfile: benefitsStreamPart.data?.userProfile,
       }));
     }
   },

@@ -25,7 +25,8 @@ import {
   Clock, 
   Star,
   Download,
-  Filter
+  Filter,
+  Calendar
 } from 'lucide-react';
 import { DatePickerWithRange } from '@/components/ui/date-range-picker';
 

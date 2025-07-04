@@ -1,3 +1,5 @@
+'use client';
+
 import { Artifact } from '@/components/create-artifact';
 import { CodeEditor } from '@/components/code-editor';
 import {

@@ -1,3 +1,5 @@
+'use client';
+
 import type { ArtifactKind } from '@/components/artifact';
 import type { Geo } from '@vercel/functions';
 

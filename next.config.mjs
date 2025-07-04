@@ -6,6 +6,15 @@ const nextConfig = {
   
   // Webpack optimization for Vercel
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+    // Add a fallback for the 'self' object on the server
+    if (isServer) {
+      config.plugins.push(
+        new webpack.DefinePlugin({
+          self: 'global',
+        })
+      );
+    }
+    
     // Fix instrumentation conflicts by preventing duplicate chunk emissions
     config.resolve.fallback = {
       ...config.resolve.fallback,

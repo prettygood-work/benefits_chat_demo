@@ -1,5 +1,4 @@
-import { db } from '@/lib/db/drizzle';
-import { benefitsPlans, clientConfigs, analyticsEvents } from '@/lib/db/schema';
+import { saveBenefitsPlan, saveClientConfig, saveAnalyticsEvent } from '@/lib/db/queries';
 
 const samplePlans = [
   {
@@ -127,17 +126,17 @@ async function seedBenefitsData() {
     
     // Insert benefits plans
     for (const plan of samplePlans) {
-      await db.insert(benefitsPlans).values(plan);
+      await saveBenefitsPlan(plan);
     }
     
     console.log('Seeding client config...');
     // Insert client config
-    await db.insert(clientConfigs).values(sampleClientConfig);
+    await saveClientConfig(sampleClientConfig);
     
     console.log('Seeding analytics events...');
     // Insert sample analytics events
     for (const event of sampleAnalyticsEvents) {
-      await db.insert(analyticsEvents).values(event);
+      await saveAnalyticsEvent(event);
     }
     
     console.log('✅ Benefits data seeded successfully!');
