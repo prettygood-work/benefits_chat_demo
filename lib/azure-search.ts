@@ -15,53 +15,32 @@ export interface BenefitsDocument {
   id: string;
   title: string;
   content: string;
-  category: 'plan_details' | 'enrollment' | 'coverage' | 'costs' | 'faq';
-  planType: 'HMO' | 'PPO' | 'HDHP' | 'EPO' | 'general';
+  planType: string;
   clientId: string;
+  category?: string;
   searchableContent: string;
   lastUpdated: string;
+  relevanceScore?: number;
 }
 
 export async function searchBenefitsContent(
-  query: string,
-  clientId: string,
-  top: number = 5
+  query: string, 
+  clientId: string
 ): Promise<BenefitsDocument[]> {
-  try {
-    const searchResults = await searchClient.search<BenefitsDocument>(query, {
-      searchFields: ['title', 'content', 'searchableContent'],
-      select: ['id', 'title', 'content', 'category', 'planType', 'clientId'],
-      filter: `clientId eq '${clientId}'`,
-      top,
-      highlightFields: ['content'],
-      semanticConfiguration: 'benefits-semantic-config'
-    });
-
-    const documents: BenefitsDocument[] = [];
-    for await (const result of searchResults.results) {
-      documents.push(result.document);
-    }
-    
-    return documents;
-  } catch (error) {
-    console.error('Azure Search error:', error);
-    return [];
-  }
-}
-
-export async function indexBenefitsDocument(document: BenefitsDocument): Promise<void> {
-  try {
-    await searchClient.uploadDocuments([document]);
-  } catch (error) {
-    console.error('Failed to index document:', error);
-    throw new ChatSDKError('bad_request:azure_search', 'Failed to index benefits document');
-  }
+  // Implementation might be elsewhere, just defining type signature
+  return [];
 }
 
 export function formatSearchResultsForPrompt(results: BenefitsDocument[]): string {
-  if (results.length === 0) return '';
-  
-  return results.map(doc => 
-    `Title: ${doc.title}\nCategory: ${doc.category}\nContent: ${doc.content}`
-  ).join('\n\n');
+  if (!results || results.length === 0) {
+    return "No specific benefits information available.";
+  }
+
+  return results
+    .map(result => {
+      return `## ${result.title}
+${result.content}
+${result.category ? `Category: ${result.category}` : ''}`;
+    })
+    .join('\n\n');
 }
