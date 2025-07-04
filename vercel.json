@@ -2,26 +2,16 @@
   "name": "benefits-chatbot-demo",
   "version": 2,
   "buildCommand": "pnpm run build",
-  "installCommand": "pnpm install",
+  "installCommand": "pnpm install --frozen-lockfile",
   "functions": {
     "app/api/**/*.ts": {
-      "maxDuration": 30
+      "maxDuration": 30,
+      "memory": 1024
     }
   },
-  "headers": [
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE, OPTIONS" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
-      ]
+  "build": {
+    "env": {
+      "NODE_OPTIONS": "--max-old-space-size=4096"
     }
-  ],
-  "rewrites": [
-    {
-      "source": "/analytics",
-      "destination": "/analytics"
-    }
-  ]
+  }
 }

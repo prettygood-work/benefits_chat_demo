@@ -16,7 +16,10 @@
       "Bash(pnpm build:*)",
       "Bash(mv:*)",
       "Bash(pnpm typecheck:*)",
-      "Bash(pnpm run:*)"
+      "Bash(pnpm run:*)",
+      "Bash(pnpm list:*)",
+      "Bash(rm:*)",
+      "Bash(chmod:*)"
     ]
   },
   "enableAllProjectMcpServers": false

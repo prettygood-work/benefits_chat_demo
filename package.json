@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbo",
-    "build": "node scripts/validate-css.js && tsx lib/db/migrate && next build",
+    "build": "bash scripts/vercel-build.sh",
     "start": "next start",
     "lint": "next lint && biome lint --write --unsafe",
     "lint:fix": "next lint --fix && biome lint --write --unsafe",
@@ -101,6 +101,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
+    "@opentelemetry/instrumentation": "^0.202.0",
+    "@opentelemetry/sdk-logs": "^0.202.0",
     "@playwright/test": "^1.50.1",
     "@tailwindcss/typography": "^0.5.15",
     "@types/d3-scale": "^4.0.8",
@@ -109,13 +111,14 @@
     "@types/pdf-parse": "^1.1.4",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "autoprefixer": "^10.4.21",
     "drizzle-kit": "^0.25.0",
     "eslint": "^8.57.0",
     "eslint-config-next": "14.2.5",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.6.3",
     "eslint-plugin-tailwindcss": "^3.17.5",
-    "postcss": "^8",
+    "postcss": "^8.5.6",
     "tailwindcss": "^3.4.1",
     "tsx": "^4.19.1",
     "typescript": "^5.6.3"
