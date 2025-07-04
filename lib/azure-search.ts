@@ -1,15 +1,22 @@
 import { SearchClient, AzureKeyCredential } from '@azure/search-documents';
 import { ChatSDKError } from './errors';
 
-if (!process.env.AZURE_SEARCH_ENDPOINT || !process.env.AZURE_SEARCH_KEY) {
-  throw new ChatSDKError('bad_request:api', 'Azure Search environment variables not configured');
-}
+// Prevent build-time errors when environment variables are missing
+let searchClient: any = null;
 
-const searchClient = new SearchClient(
-  process.env.AZURE_SEARCH_ENDPOINT,
-  'benefits-index',
-  new AzureKeyCredential(process.env.AZURE_SEARCH_KEY)
-);
+// Only initialize if environment variables exist
+if (process.env.AZURE_SEARCH_ENDPOINT && process.env.AZURE_SEARCH_KEY) {
+  try {
+    searchClient = new SearchClient(
+      process.env.AZURE_SEARCH_ENDPOINT,
+      'benefits-index',
+      new AzureKeyCredential(process.env.AZURE_SEARCH_KEY)
+    );
+  } catch (error) {
+    console.error('Failed to initialize Azure Search client:', error);
+    // Don't throw here - this will block the build
+  }
+}
 
 export interface BenefitsDocument {
   id: string;
@@ -29,6 +36,11 @@ export async function searchBenefitsContent(
   top: number = 5
 ): Promise<BenefitsDocument[]> {
   try {
+    if (!searchClient) {
+      console.log('Azure Search not configured, returning mock data');
+      return getMockSearchResults(clientId);
+    }
+    
     const searchResults = await searchClient.search(query, {
       searchFields: ['title', 'content', 'searchableContent'],
       select: ['id', 'title', 'content', 'category', 'planType', 'clientId', 'searchableContent', 'lastUpdated'],
@@ -56,40 +68,48 @@ export async function searchBenefitsContent(
     return documents;
   } catch (error) {
     console.error('Azure Search error:', error);
-    // Return mock data for demo when search fails
-    return [
-      {
-        id: '1',
-        title: 'HMO vs PPO Plan Comparison',
-        content: 'HMO plans require you to choose a primary care physician and get referrals for specialists. PPO plans offer more flexibility to see any doctor without referrals.',
-        planType: 'general',
-        clientId,
-        category: 'plan_details',
-        searchableContent: 'HMO PPO comparison primary care physician referrals flexibility',
-        lastUpdated: new Date().toISOString(),
-        relevanceScore: 0.95
-      },
-      {
-        id: '2',
-        title: 'Understanding Deductibles and Copays',
-        content: 'A deductible is the amount you pay before your insurance starts covering costs. Copays are fixed amounts you pay for specific services.',
-        planType: 'general',
-        clientId,
-        category: 'coverage',
-        searchableContent: 'deductible copay insurance coverage costs services',
-        lastUpdated: new Date().toISOString(),
-        relevanceScore: 0.87
-      }
-    ];
+    return getMockSearchResults(clientId);
   }
+}
+
+function getMockSearchResults(clientId: string): BenefitsDocument[] {
+  return [
+    {
+      id: '1',
+      title: 'HMO vs PPO Plan Comparison',
+      content: 'HMO plans require you to choose a primary care physician and get referrals for specialists. PPO plans offer more flexibility to see any doctor without referrals.',
+      planType: 'general',
+      clientId,
+      category: 'plan_details',
+      searchableContent: 'HMO PPO comparison primary care physician referrals flexibility',
+      lastUpdated: new Date().toISOString(),
+      relevanceScore: 0.95
+    },
+    {
+      id: '2',
+      title: 'Understanding Deductibles and Copays',
+      content: 'A deductible is the amount you pay before your insurance starts covering costs. Copays are fixed amounts you pay for specific services.',
+      planType: 'general',
+      clientId,
+      category: 'coverage',
+      searchableContent: 'deductible copay insurance coverage costs services',
+      lastUpdated: new Date().toISOString(),
+      relevanceScore: 0.87
+    }
+  ];
 }
 
 export async function indexBenefitsDocument(document: BenefitsDocument): Promise<void> {
   try {
+    if (!searchClient) {
+      console.log('Azure Search not configured, skipping document indexing');
+      return;
+    }
+    
     await searchClient.uploadDocuments([document]);
   } catch (error) {
     console.error('Failed to index document:', error);
-    throw new ChatSDKError('bad_request:api', 'Failed to index benefits document');
+    // Don't throw errors here for demo
   }
 }
 

@@ -122,22 +122,37 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     // Only run in browser environment
     if (typeof document === 'undefined') return;
     
-    const root = document.documentElement;
-    
-    // Update CSS custom properties
-    root.style.setProperty('--color-primary', theme.colors.primary);
-    root.style.setProperty('--color-secondary', theme.colors.secondary);
-    root.style.setProperty('--color-accent', theme.colors.accent);
-    root.style.setProperty('--color-background', theme.colors.background);
-    root.style.setProperty('--color-foreground', theme.colors.foreground);
-    root.style.setProperty('--color-muted', theme.colors.muted);
-    root.style.setProperty('--color-border', theme.colors.border);
-    
-    // Update typography
-    root.style.setProperty('--font-family', theme.typography.fontFamily);
-    Object.entries(theme.typography.fontSize).forEach(([size, value]) => {
-      root.style.setProperty(`--font-size-${size}`, value);
-    });
+    try {
+      const root = document.documentElement;
+      
+      // Safely set CSS properties
+      const safeSet = (key: string, value: string) => {
+        try {
+          root.style.setProperty(key, value);
+        } catch (err) {
+          console.warn(`Failed to set CSS variable ${key}:`, err);
+        }
+      };
+      
+      // Update CSS custom properties
+      safeSet('--color-primary', theme.colors.primary);
+      safeSet('--color-secondary', theme.colors.secondary);
+      safeSet('--color-accent', theme.colors.accent);
+      safeSet('--color-background', theme.colors.background);
+      safeSet('--color-foreground', theme.colors.foreground);
+      safeSet('--color-muted', theme.colors.muted);
+      safeSet('--color-border', theme.colors.border);
+      
+      // Update typography
+      safeSet('--font-family', theme.typography.fontFamily);
+      Object.entries(theme.typography.fontSize || {}).forEach(([size, value]) => {
+        if (size && value) {
+          safeSet(`--font-size-${size}`, value);
+        }
+      });
+    } catch (error) {
+      console.error('Failed to update CSS variables:', error);
+    }
   };
 
   const setThemeById = (themeId: string) => {

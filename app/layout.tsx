@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import { ThemeProvider as BenefitsThemeProvider } from '@/lib/theme-manager';
+import { ErrorBoundary } from '@/components/error-boundary';
 
 import './globals.css';
 import { SessionProvider } from 'next-auth/react';
@@ -79,8 +80,10 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <Toaster position="top-center" />
-            <SessionProvider>{children}</SessionProvider>
+            <ErrorBoundary>
+              <Toaster position="top-center" />
+              <SessionProvider>{children}</SessionProvider>
+            </ErrorBoundary>
           </ThemeProvider>
         </BenefitsThemeProvider>
       </body>

@@ -45,7 +45,7 @@ const PurePreviewMessage = ({
   const [mode, setMode] = useState<'view' | 'edit'>('view');
 
   const attachmentsFromMessage = message.parts.filter(
-    (part) => part.type === 'file',
+    (part) => 'url' in part && part.type === 'file',
   );
 
   useDataStream();
@@ -100,10 +100,10 @@ const PurePreviewMessage = ({
             )}
 
             {message.parts?.map((part, index) => {
-              const { type } = part;
+              // Handle part types with safe type checking
               const key = `message-${message.id}-part-${index}`;
-
-              if (type === 'reasoning') {
+              
+              if (part.type === 'reasoning' && 'text' in part) {
                 return (
                   <MessageReasoning
                     key={key}
@@ -113,7 +113,7 @@ const PurePreviewMessage = ({
                 );
               }
 
-              if (type === 'text') {
+              if (part.type === 'text' && 'text' in part) {
                 if (mode === 'view') {
                   return (
                     <div key={key} className="flex flex-row gap-2 items-start">
@@ -165,7 +165,7 @@ const PurePreviewMessage = ({
                 }
               }
 
-              if (type === 'tool-getWeather') {
+              if (part.type === 'tool-getWeather') {
                 const { toolCallId, state } = part;
 
                 if (state === 'input-available') {
@@ -186,7 +186,7 @@ const PurePreviewMessage = ({
                 }
               }
 
-              if (type === 'tool-createDocument') {
+              if (part.type === 'tool-createDocument') {
                 const { toolCallId, state } = part;
 
                 if (state === 'input-available') {
@@ -223,7 +223,7 @@ const PurePreviewMessage = ({
                 }
               }
 
-              if (type === 'tool-updateDocument') {
+              if (part.type === 'tool-updateDocument') {
                 const { toolCallId, state } = part;
 
                 if (state === 'input-available') {
@@ -266,7 +266,7 @@ const PurePreviewMessage = ({
                 }
               }
 
-              if (type === 'tool-requestSuggestions') {
+              if (part.type === 'tool-requestSuggestions') {
                 const { toolCallId, state } = part;
 
                 if (state === 'input-available') {

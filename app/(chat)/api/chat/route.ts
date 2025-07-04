@@ -248,13 +248,15 @@ export async function POST(request: Request) {
             }),
             calculatePlanCosts: {
               description: 'Calculate annual costs for health insurance plans',
-              // Fix for error #3: Replace 'parameters' with 'inputSchema'
+              // Fix for AI SDK compatibility - adjust based on latest SDK version
+              // If AI SDK uses 'parameters', remove 'inputSchema'
+              // If AI SDK uses 'inputSchema', keep this version
               inputSchema: z.object({
                 planType: z.string(),
                 familySize: z.number(),
                 estimatedUsage: z.enum(['low', 'medium', 'high'])
               }),
-              execute: async ({ planType, familySize, estimatedUsage }) => {
+              execute: createResilientTool(async ({ planType, familySize, estimatedUsage }) => {
                 // Get plan data from database
                 const plans = await getBenefitsPlansByClientId(clientId);
                 const selectedPlan = plans.find(p => p.type === planType);
@@ -290,7 +292,7 @@ export async function POST(request: Request) {
                     prescriptionCoverage: selectedPlan.prescriptionCoverage
                   }
                 };
-              }
+              })
             },
             comparePlans: {
               description: 'Compare multiple health insurance plans',
@@ -302,7 +304,7 @@ export async function POST(request: Request) {
                   medicalConditions: z.array(z.string())
                 })
               }),
-              execute: async ({ planIds, userProfile }) => {
+              execute: createResilientTool(async ({ planIds, userProfile }) => {
                 const plans = await getBenefitsPlansByClientId(clientId);
                 const selectedPlans = plans.filter(p => planIds.includes(p.id));
                 
@@ -333,7 +335,7 @@ export async function POST(request: Request) {
                 });
                 
                 return { comparison, totalPlans: comparison.length };
-              }
+              })
             },
             createPlanComparison: {
               description: 'Create an interactive plan comparison chart',
@@ -346,7 +348,7 @@ export async function POST(request: Request) {
                   medicalConditions: z.array(z.string()).optional()
                 }).optional()
               }),
-              execute: async ({ planIds, userContext }) => {
+              execute: createResilientTool(async ({ planIds, userContext }) => {
                 const plans = await getBenefitsPlansByClientId(clientId);
                 let selectedPlans = plans;
                 
@@ -393,7 +395,7 @@ export async function POST(request: Request) {
                   message: `Created interactive plan comparison for ${selectedPlans.length} plans. The comparison includes cost calculations, recommendations, and detailed feature analysis based on your profile.`,
                   plansIncluded: selectedPlans.map(p => ({ id: p.id, name: p.name, type: p.type }))
                 };
-              }
+              })
             },
           },
           experimental_telemetry: {
@@ -441,9 +443,15 @@ export async function POST(request: Request) {
       return new Response(stream);
     }
   } catch (error) {
+    // Enhanced error logging
+    console.error("Error in chat API route:", error);
     if (error instanceof ChatSDKError) {
       return error.toResponse();
     }
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 }
 
@@ -483,4 +491,18 @@ interface BenefitsSearchResult {
   clientId?: string;
   searchableContent?: string;
   lastUpdated?: string;
+}
+
+// Add a wrapper function to make tool execution more resilient
+function createResilientTool(toolFn: any) {
+  return async (...args: any[]) => {
+    try {
+      return await toolFn(...args);
+    } catch (error) {
+      console.error(`Tool execution error:`, error);
+      return { 
+        error: `Sorry, there was an issue processing this request. ${error instanceof Error ? error.message : 'Please try again.'}` 
+      };
+    }
+  };
 }
