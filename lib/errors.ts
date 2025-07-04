@@ -37,6 +37,7 @@ export class ChatSDKError extends Error {
   public type: ErrorType;
   public surface: Surface;
   public statusCode: number;
+  public cause?: string;
 
   constructor(errorCode: ErrorCode, cause?: string) {
     super();

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -51,11 +51,8 @@ export default function AnalyticsPage() {
     to: new Date()
   });
 
-  useEffect(() => {
-    fetchAnalyticsData();
-  }, [dateRange]);
-
-  const fetchAnalyticsData = async () => {
+  // Define fetchAnalyticsData before using it in useEffect
+  const fetchAnalyticsData = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(`/api/analytics?from=${dateRange.from.toISOString()}&to=${dateRange.to.toISOString()}`);
@@ -109,7 +106,12 @@ export default function AnalyticsPage() {
       });
     }
     setLoading(false);
-  };
+  }, [dateRange]); // Include dateRange as a dependency
+
+  // Now use fetchAnalyticsData in useEffect
+  useEffect(() => {
+    fetchAnalyticsData();
+  }, [fetchAnalyticsData]); // Only include fetchAnalyticsData to avoid circular dependencies
 
   const exportData = () => {
     if (!analyticsData) return;
@@ -259,7 +261,7 @@ export default function AnalyticsPage() {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ planType, percent }) => `${planType} ${(percent * 100).toFixed(0)}%`}
+                  label={({ planType, percent }) => `${planType} ${(percent ? (percent * 100).toFixed(0) : 0)}%`}
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="selections"

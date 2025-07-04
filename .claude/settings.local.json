@@ -21,7 +21,8 @@
       "Bash(rm:*)",
       "Bash(chmod:*)",
       "Bash(pnpm remove:*)",
-      "Bash(NODE_OPTIONS=\"--max-old-space-size=4096\" npx next build)"
+      "Bash(NODE_OPTIONS=\"--max-old-space-size=4096\" npx next build)",
+      "Bash(NODE_OPTIONS=\"--max-old-space-size=2048\" npx next build --no-lint)"
     ]
   },
   "enableAllProjectMcpServers": false

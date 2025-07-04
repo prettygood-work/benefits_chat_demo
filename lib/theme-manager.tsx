@@ -119,6 +119,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [availableThemes] = useState<ClientTheme[]>(DEMO_THEMES);
 
   const updateCSSVariables = (theme: ClientTheme) => {
+    // Only run in browser environment
+    if (typeof document === 'undefined') return;
+    
     const root = document.documentElement;
     
     // Update CSS custom properties
@@ -148,21 +151,23 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  // Move this logic to useCallback to avoid dependency issues
   useEffect(() => {
+    // Only run in browser environment
+    if (typeof window === 'undefined') return;
+    
     // Load saved theme on mount
-    if (typeof window !== 'undefined') {
-      const savedThemeId = localStorage.getItem('currentTheme');
-      if (savedThemeId) {
-        const theme = availableThemes.find(t => t.id === savedThemeId);
-        if (theme) {
-          setCurrentTheme(theme);
-          updateCSSVariables(theme);
-        }
-      } else {
-        updateCSSVariables(currentTheme);
+    const savedThemeId = localStorage.getItem('currentTheme');
+    if (savedThemeId) {
+      const theme = availableThemes.find(t => t.id === savedThemeId);
+      if (theme) {
+        setCurrentTheme(theme);
+        updateCSSVariables(theme);
       }
+    } else {
+      updateCSSVariables(currentTheme);
     }
-  }, [currentTheme, availableThemes]);
+  }, [availableThemes, currentTheme]); // Empty dependency array for initialization only
 
   return (
     <ThemeContext.Provider 
