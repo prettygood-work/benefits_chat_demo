@@ -64,9 +64,18 @@ const nextConfig = {
       };
     }
 
+    // allow plain CSS imports from react-data-grid
+    config.module.rules.push({
+      test: /\.css$/,
+      include: /react-data-grid\/lib/,
+      use: [
+        require.resolve('style-loader'),
+        require.resolve('css-loader'),
+      ],
+    });
+
     return config;
   },
 };
 
-module.exports = nextConfig;
 module.exports = nextConfig;
