@@ -23,7 +23,7 @@ const baseURL = `http://localhost:${PORT}`;
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './tests',
+  testDir: './__tests__/e2e',
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -52,18 +52,16 @@ export default defineConfig({
   /* Configure projects */
   projects: [
     {
-      name: 'e2e',
-      testMatch: /e2e\/.*.test.ts/,
-      use: {
-        ...devices['Desktop Chrome'],
-      },
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
     },
     {
-      name: 'routes',
-      testMatch: /routes\/.*.test.ts/,
-      use: {
-        ...devices['Desktop Chrome'],
-      },
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+    },
+    {
+      name: 'Mobile Chrome',
+      use: { ...devices['Pixel 5'] },
     },
 
     // {
