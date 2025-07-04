@@ -45,9 +45,7 @@ import type { VisibilityType } from '@/components/visibility-selector';
 import { z } from 'zod';
 import type { BenefitsDocument } from '@/lib/azure-search';
 
-export const config = {
-  runtime: 'edge',
-};
+export const runtime = 'nodejs';
 
 export const maxDuration = 60;
 
@@ -507,5 +505,7 @@ function createResilientTool<T extends Record<string, any>, U>(
         error: `Sorry, there was an issue processing this request. ${error instanceof Error ? error.message : 'Please try again.'}` 
       };
     }
+  };
+}
   };
 }

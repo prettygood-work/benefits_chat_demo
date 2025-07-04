@@ -1,5 +1,7 @@
+export const runtime = 'nodejs';  // Health check must run under Node
+
 import { NextResponse } from 'next/server';
-import { drizzle } from 'drizzle-orm/postgres-js';
+import { drizzle, sql } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 
 export async function GET() {
@@ -18,7 +20,7 @@ export async function GET() {
       const db = drizzle(client);
       
       // Simple query to check database connection
-      const result = await db.execute(sql`SELECT 1 as check`);
+      const result = await db.execute(sql`SELECT 1 as check;`);
       checks.database = result.length > 0;
       client.end();
     }
