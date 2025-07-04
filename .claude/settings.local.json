@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm db:generate:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm db:migrate:*)",
+      "Bash(ls:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx next build:*)",
+      "Bash(node:*)",
+      "Bash(grep:*)",
+      "Bash(pnpm add:*)",
+      "Bash(find:*)",
+      "Bash(sed:*)"
+    ]
+  },
+  "enableAllProjectMcpServers": false
+}

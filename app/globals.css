@@ -24,6 +24,23 @@
 
 @layer base {
     :root {
+        /* Theme-specific variables */
+        --color-primary: #0066cc;
+        --color-secondary: #004499;
+        --color-accent: #ff6b35;
+        --color-background: #ffffff;
+        --color-foreground: #1a1a1a;
+        --color-muted: #f5f5f5;
+        --color-border: #e0e0e0;
+        
+        /* Typography variables */
+        --font-family: 'Inter';
+        --font-size-xs: 12px;
+        --font-size-sm: 14px;
+        --font-size-base: 16px;
+        --font-size-lg: 18px;
+        --font-size-xl: 20px;
+
         --background: 0 0% 100%;
         --foreground: 240 10% 3.9%;
         --card: 0 0% 100%;
@@ -101,7 +118,27 @@
 
     body {
         @apply bg-background text-foreground;
+        font-family: var(--font-family), system-ui, sans-serif;
     }
+}
+
+/* Theme-aware utility classes */
+.theme-aware {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    border-color: var(--color-border);
+}
+
+.theme-primary {
+    background-color: var(--color-primary);
+}
+
+.theme-secondary {
+    background-color: var(--color-secondary);
+}
+
+.theme-accent {
+    background-color: var(--color-accent);
 }
 
 .skeleton {

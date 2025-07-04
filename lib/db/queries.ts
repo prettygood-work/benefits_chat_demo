@@ -27,6 +27,14 @@ import {
   type DBMessage,
   type Chat,
   stream,
+  benefitsPlans,
+  userProfiles,
+  clientConfigs,
+  analyticsEvents,
+  type BenefitsPlan,
+  type UserProfile,
+  type ClientConfig,
+  type AnalyticsEvent,
 } from './schema';
 import type { ArtifactKind } from '@/components/artifact';
 import { generateUUID } from '../utils';
@@ -533,6 +541,152 @@ export async function getStreamIdsByChatId({ chatId }: { chatId: string }) {
     throw new ChatSDKError(
       'bad_request:database',
       'Failed to get stream ids by chat id',
+    );
+  }
+}
+
+// Benefits Plans
+export async function getBenefitsPlansByClientId(clientId: string) {
+  try {
+    return await db
+      .select()
+      .from(benefitsPlans)
+      .where(eq(benefitsPlans.clientId, clientId));
+  } catch (error) {
+    throw new ChatSDKError(
+      'bad_request:database',
+      'Failed to get benefits plans by client id',
+    );
+  }
+}
+
+export async function saveBenefitsPlan(plan: Omit<BenefitsPlan, 'id' | 'createdAt'>) {
+  try {
+    const [newPlan] = await db
+      .insert(benefitsPlans)
+      .values(plan)
+      .returning();
+    return newPlan;
+  } catch (error) {
+    throw new ChatSDKError(
+      'bad_request:database',
+      'Failed to save benefits plan',
+    );
+  }
+}
+
+// User Profiles
+export async function getUserProfileBySessionId(sessionId: string) {
+  try {
+    const [profile] = await db
+      .select()
+      .from(userProfiles)
+      .where(eq(userProfiles.sessionId, sessionId))
+      .limit(1);
+    return profile;
+  } catch (error) {
+    throw new ChatSDKError(
+      'bad_request:database',
+      'Failed to get user profile by session id',
+    );
+  }
+}
+
+export async function saveUserProfile(profile: Omit<UserProfile, 'id' | 'updatedAt'>) {
+  try {
+    const existing = await getUserProfileBySessionId(profile.sessionId);
+    
+    if (existing) {
+      const [updated] = await db
+        .update(userProfiles)
+        .set({ ...profile, updatedAt: new Date() })
+        .where(eq(userProfiles.sessionId, profile.sessionId))
+        .returning();
+      return updated;
+    } else {
+      const [newProfile] = await db
+        .insert(userProfiles)
+        .values(profile)
+        .returning();
+      return newProfile;
+    }
+  } catch (error) {
+    throw new ChatSDKError(
+      'bad_request:database',
+      'Failed to save user profile',
+    );
+  }
+}
+
+// Client Configs
+export async function getClientConfigById(id: string) {
+  try {
+    const [config] = await db
+      .select()
+      .from(clientConfigs)
+      .where(eq(clientConfigs.id, id))
+      .limit(1);
+    return config;
+  } catch (error) {
+    throw new ChatSDKError(
+      'bad_request:database',
+      'Failed to get client config by id',
+    );
+  }
+}
+
+export async function saveClientConfig(config: Omit<ClientConfig, 'id' | 'createdAt'>) {
+  try {
+    const [newConfig] = await db
+      .insert(clientConfigs)
+      .values(config)
+      .returning();
+    return newConfig;
+  } catch (error) {
+    throw new ChatSDKError(
+      'bad_request:database',
+      'Failed to save client config',
+    );
+  }
+}
+
+// Analytics
+export async function saveAnalyticsEvent(event: Omit<AnalyticsEvent, 'id' | 'timestamp'>) {
+  try {
+    const [newEvent] = await db
+      .insert(analyticsEvents)
+      .values(event)
+      .returning();
+    return newEvent;
+  } catch (error) {
+    throw new ChatSDKError(
+      'bad_request:database',
+      'Failed to save analytics event',
+    );
+  }
+}
+
+export async function getAnalyticsEventsByClientId(
+  clientId: string, 
+  startDate: Date, 
+  endDate: Date
+) {
+  try {
+    return await db
+      .select()
+      .from(analyticsEvents)
+      .where(
+        and(
+          eq(analyticsEvents.clientId, clientId),
+          gte(analyticsEvents.timestamp, startDate),
+          lt(analyticsEvents.timestamp, endDate)
+        )
+      )
+      .orderBy(desc(analyticsEvents.timestamp));
+  } catch (error) {
+    throw new ChatSDKError(
+      'bad_request:database',
+      'Failed to get analytics events by client id',
     );
   }
 }
