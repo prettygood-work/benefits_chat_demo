@@ -2,29 +2,43 @@
 const nextConfig = {
   experimental: {
     ppr: true,
+    // Disable instrumentation to prevent conflicts
+    instrumentationHook: false,
   },
   
   // Webpack optimization for Vercel
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Optimize for production builds
-    if (!dev) {
-      config.optimization = {
-        ...config.optimization,
-        splitChunks: {
-          ...config.optimization.splitChunks,
-          maxSize: 244000,
-          cacheGroups: {
-            ...config.optimization.splitChunks.cacheGroups,
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name: 'vendors',
-              chunks: 'all',
-              maxSize: 244000,
-            },
+    // Fix instrumentation conflicts
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      path: false,
+      os: false,
+    };
+    
+    // Prevent duplicate chunk emissions
+    config.optimization = {
+      ...config.optimization,
+      splitChunks: {
+        chunks: 'all',
+        minSize: 20000,
+        maxSize: 200000,
+        cacheGroups: {
+          default: {
+            minChunks: 1,
+            priority: -20,
+            reuseExistingChunk: true,
+          },
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            priority: -10,
+            reuseExistingChunk: true,
+            maxSize: 200000,
           },
         },
-      };
-    }
+      },
+    };
     
     return config;
   },
@@ -38,9 +52,6 @@ const nextConfig = {
     domains: ['avatar.vercel.sh'],
     formats: ['image/webp', 'image/avif'],
   },
-  
-  // Output configuration for better caching
-  output: 'standalone',
   
   // TypeScript configuration
   typescript: {
