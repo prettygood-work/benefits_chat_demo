@@ -4,6 +4,7 @@ import type { User } from 'next-auth';
 import { useRouter } from 'next/navigation';
 
 import { PlusIcon } from '@/components/icons';
+import { BarChart3 } from 'lucide-react';
 import { SidebarHistory } from '@/components/sidebar-history';
 import { SidebarUserNav } from '@/components/sidebar-user-nav';
 import { Button } from '@/components/ui/button';
@@ -57,6 +58,26 @@ export function AppSidebar({ user }: { user: User | undefined }) {
             </Tooltip>
           </div>
         </SidebarMenu>
+        <div className="mt-4 px-2">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                asChild
+                className="w-full justify-start gap-2 text-sm"
+              >
+                <Link
+                  href="/analytics"
+                  onClick={() => setOpenMobile(false)}
+                >
+                  <BarChart3 className="h-4 w-4" />
+                  Analytics
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>View Analytics Dashboard</TooltipContent>
+          </Tooltip>
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarHistory user={user} />

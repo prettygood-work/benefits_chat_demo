@@ -228,6 +228,7 @@ export async function POST(request: Request) {
                   'requestSuggestions',
                   'calculatePlanCosts',
                   'comparePlans',
+                  'createPlanComparison',
                 ],
           experimental_transform: smoothStream({ chunking: 'word' }),
           tools: {
@@ -323,6 +324,62 @@ export async function POST(request: Request) {
                 });
                 
                 return { comparison, totalPlans: comparison.length };
+              }
+            },
+            createPlanComparison: {
+              description: 'Create an interactive plan comparison chart',
+              parameters: z.object({
+                planIds: z.array(z.string()).optional(),
+                userContext: z.object({
+                  familySize: z.number().optional(),
+                  budgetPriority: z.string().optional(),
+                  medicalConditions: z.array(z.string()).optional()
+                }).optional()
+              }),
+              execute: async ({ planIds, userContext }) => {
+                const plans = await getBenefitsPlansByClientId(clientId);
+                let selectedPlans = plans;
+                
+                // If specific plan IDs provided, filter to those
+                if (planIds && planIds.length > 0) {
+                  selectedPlans = plans.filter(p => planIds.includes(p.id));
+                }
+                
+                // Track analytics
+                await saveAnalyticsEvent({
+                  sessionId: session.user.id,
+                  clientId,
+                  eventType: 'plan_compared',
+                  metadata: { 
+                    plansCompared: selectedPlans.map(p => p.id),
+                    userContext 
+                  }
+                });
+
+                // Create the artifact content
+                const artifactContent = {
+                  plans: selectedPlans,
+                  userProfile: userContext,
+                };
+
+                // Send the benefits artifact data
+                dataStream.writeData({
+                  type: 'data-benefits-plans',
+                  data: artifactContent,
+                });
+
+                // Create artifact
+                dataStream.writeArtifact({
+                  id: generateUUID(),
+                  type: 'benefits',
+                  title: 'Health Plan Comparison',
+                  content: JSON.stringify(artifactContent),
+                });
+
+                return {
+                  message: `Created interactive plan comparison for ${selectedPlans.length} plans. The comparison includes cost calculations, recommendations, and detailed feature analysis based on your profile.`,
+                  plansIncluded: selectedPlans.map(p => ({ id: p.id, name: p.name, type: p.type }))
+                };
               }
             },
           },

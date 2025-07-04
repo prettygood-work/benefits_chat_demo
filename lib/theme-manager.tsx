@@ -1,7 +1,6 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { getClientConfigById } from '@/lib/db/queries';
 
 export interface ClientTheme {
   id: string;
@@ -143,23 +142,31 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     if (theme) {
       setCurrentTheme(theme);
       updateCSSVariables(theme);
-      localStorage.setItem('currentTheme', themeId);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('currentTheme', themeId);
+      }
     }
   };
 
   useEffect(() => {
     // Load saved theme on mount
-    const savedThemeId = localStorage.getItem('currentTheme');
-    if (savedThemeId) {
-      setThemeById(savedThemeId);
-    } else {
-      updateCSSVariables(currentTheme);
+    if (typeof window !== 'undefined') {
+      const savedThemeId = localStorage.getItem('currentTheme');
+      if (savedThemeId) {
+        const theme = availableThemes.find(t => t.id === savedThemeId);
+        if (theme) {
+          setCurrentTheme(theme);
+          updateCSSVariables(theme);
+        }
+      } else {
+        updateCSSVariables(currentTheme);
+      }
     }
-  }, []);
+  }, [currentTheme, availableThemes]);
 
   return (
     <ThemeContext.Provider 
-      value={{ 
+      value={{
         currentTheme, 
         setThemeById, 
         availableThemes, 
