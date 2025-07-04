@@ -186,7 +186,7 @@ export async function POST(request: Request) {
 
     // Get last user message for search
     const lastUserMessage = message;
-    let searchResults = [];
+    let searchResults: BenefitsSearchResult[] = [];
     try {
       searchResults = await searchBenefitsContent(
         lastUserMessage.parts.map(part => part.text).join(' '), 
@@ -457,4 +457,13 @@ export async function DELETE(request: Request) {
   const deletedChat = await deleteChatById({ id });
 
   return Response.json(deletedChat, { status: 200 });
+}
+
+// Add this interface for search results
+interface BenefitsSearchResult {
+  id: string;
+  title: string;
+  content: string;
+  category?: string;
+  relevanceScore?: number;
 }
