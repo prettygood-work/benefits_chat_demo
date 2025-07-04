@@ -1,7 +1,8 @@
 export const runtime = 'nodejs';  // Health check must run under Node
 
 import { NextResponse } from 'next/server';
-import { drizzle, sql } from 'drizzle-orm/postgres-js';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import { sql } from 'drizzle-orm';
 import postgres from 'postgres';
 
 export async function GET() {

@@ -23,7 +23,9 @@
       "Bash(pnpm remove:*)",
       "Bash(NODE_OPTIONS=\"--max-old-space-size=4096\" npx next build)",
       "Bash(NODE_OPTIONS=\"--max-old-space-size=2048\" npx next build --no-lint)",
-      "Bash(vercel:*)"
+      "Bash(vercel:*)",
+      "Bash(timeout 30s npx next build:*)",
+      "Bash(timeout 20s pnpm run lint)"
     ]
   },
   "enableAllProjectMcpServers": false

@@ -141,7 +141,7 @@
     }
 
     .skeleton-bg {
-        @apply bg-foreground/10;
+        @apply bg-[var(--color-foreground)]/10;
     }
 
     .skeleton-div {
