@@ -51,7 +51,7 @@ export default function AnalyticsPage() {
     to: new Date()
   });
 
-  // Define fetchAnalyticsData before using it in useEffect
+  // Define fetchAnalyticsData with proper memoization
   const fetchAnalyticsData = useCallback(async () => {
     setLoading(true);
     try {
@@ -60,7 +60,7 @@ export default function AnalyticsPage() {
       setAnalyticsData(data);
     } catch (error) {
       console.error('Failed to fetch analytics:', error);
-      // Set mock data for demo
+      // Fallback to mock data if fetch fails
       setAnalyticsData({
         totalConversations: 1247,
         totalUsers: 523,
@@ -108,10 +108,10 @@ export default function AnalyticsPage() {
     setLoading(false);
   }, [dateRange]); // Include dateRange as a dependency
 
-  // Now use fetchAnalyticsData in useEffect
+  // Use fetchAnalyticsData in useEffect with proper dependencies
   useEffect(() => {
     fetchAnalyticsData();
-  }, [fetchAnalyticsData]); // Only include fetchAnalyticsData to avoid circular dependencies
+  }, [fetchAnalyticsData]); // fetchAnalyticsData is memoized, so this is safe
 
   const exportData = () => {
     if (!analyticsData) return;

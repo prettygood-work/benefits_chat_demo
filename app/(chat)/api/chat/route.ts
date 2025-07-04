@@ -45,6 +45,10 @@ import type { VisibilityType } from '@/components/visibility-selector';
 import { z } from 'zod';
 import type { BenefitsDocument } from '@/lib/azure-search';
 
+export const config = {
+  runtime: 'edge',
+};
+
 export const maxDuration = 60;
 
 const BENEFITS_SYSTEM_PROMPT = `You are an expert benefits advisor helping employees understand their health insurance options.
@@ -248,9 +252,6 @@ export async function POST(request: Request) {
             }),
             calculatePlanCosts: {
               description: 'Calculate annual costs for health insurance plans',
-              // Fix for AI SDK compatibility - adjust based on latest SDK version
-              // If AI SDK uses 'parameters', remove 'inputSchema'
-              // If AI SDK uses 'inputSchema', keep this version
               inputSchema: z.object({
                 planType: z.string(),
                 familySize: z.number(),
@@ -493,11 +494,13 @@ interface BenefitsSearchResult {
   lastUpdated?: string;
 }
 
-// Add a wrapper function to make tool execution more resilient
-function createResilientTool(toolFn: any) {
-  return async (...args: any[]) => {
+// Add this helper function to ensure tool functions are properly typed
+function createResilientTool<T extends Record<string, any>, U>(
+  toolFn: (args: T) => Promise<U>
+) {
+  return async (args: T): Promise<U | { error: string }> => {
     try {
-      return await toolFn(...args);
+      return await toolFn(args);
     } catch (error) {
       console.error(`Tool execution error:`, error);
       return { 

@@ -1,21 +1,26 @@
 import { SearchClient, AzureKeyCredential } from '@azure/search-documents';
 import { ChatSDKError } from './errors';
 
-// Prevent build-time errors when environment variables are missing
-let searchClient: any = null;
+// Use environment variables safely
+const searchEndpoint = process.env.AZURE_SEARCH_ENDPOINT;
+const searchKey = process.env.AZURE_SEARCH_KEY;
+const searchIndex = process.env.AZURE_SEARCH_INDEX || 'benefits-index';
 
-// Only initialize if environment variables exist
-if (process.env.AZURE_SEARCH_ENDPOINT && process.env.AZURE_SEARCH_KEY) {
+let searchClient: SearchClient | null = null;
+
+// Only initialize if all required environment variables exist
+if (typeof searchEndpoint === 'string' && typeof searchKey === 'string') {
   try {
     searchClient = new SearchClient(
-      process.env.AZURE_SEARCH_ENDPOINT,
-      'benefits-index',
-      new AzureKeyCredential(process.env.AZURE_SEARCH_KEY)
+      searchEndpoint,
+      searchIndex,
+      new AzureKeyCredential(searchKey)
     );
   } catch (error) {
     console.error('Failed to initialize Azure Search client:', error);
-    // Don't throw here - this will block the build
   }
+} else {
+  console.warn('Azure Search is not configured. Provide AZURE_SEARCH_ENDPOINT and AZURE_SEARCH_KEY.');
 }
 
 export interface BenefitsDocument {
@@ -56,7 +61,7 @@ export async function searchBenefitsContent(
         id: doc.id,
         title: doc.title,
         content: doc.content,
-        planType: doc.planType,
+        planType: doc.planType || 'general',
         clientId: doc.clientId,
         category: doc.category,
         searchableContent: doc.searchableContent || doc.content,

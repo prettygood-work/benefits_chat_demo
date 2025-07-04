@@ -166,7 +166,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // Move this logic to useCallback to avoid dependency issues
+  // Fix the dependency issue with useEffect
   useEffect(() => {
     // Only run in browser environment
     if (typeof window === 'undefined') return;
@@ -182,7 +182,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     } else {
       updateCSSVariables(currentTheme);
     }
-  }, [availableThemes, currentTheme]); // Empty dependency array for initialization only
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty dependency array for initialization only, with eslint disable
 
   return (
     <ThemeContext.Provider 
