@@ -25,9 +25,9 @@ import {
   Clock, 
   Star,
   Download,
-  Filter,
-  Calendar
+  Filter
 } from 'lucide-react';
+import { DatePickerWithRange } from '@/components/ui/date-range-picker';
 
 interface AnalyticsData {
   totalConversations: number;

@@ -189,11 +189,11 @@ export async function POST(request: Request) {
 
     // Get last user message for search
     const lastUserMessage = message;
-    let searchResults: BenefitsSearchResult[] = [];
+    let searchResults: BenefitsDocument[] = [];
     try {
       searchResults = await searchBenefitsContent(
         lastUserMessage.parts.map(part => {
-          // Fix for error #1: Handle different part types
+          // Handle different part types
           if ('text' in part) {
             return part.text;
           }
@@ -207,7 +207,7 @@ export async function POST(request: Request) {
 
     // Enhance system prompt with search results and user profile
     const enhancedSystemPrompt = BENEFITS_SYSTEM_PROMPT
-      .replace('{SEARCH_RESULTS}', formatSearchResultsForPrompt(searchResults as BenefitsDocument[]))
+      .replace('{SEARCH_RESULTS}', formatSearchResultsForPrompt(searchResults))
       .replace('{USER_PROFILE}', JSON.stringify(userProfile || {}));
 
     // Track analytics event
@@ -479,18 +479,7 @@ export async function DELETE(request: Request) {
   return Response.json(deletedChat, { status: 200 });
 }
 
-// Add this interface for search results
-interface BenefitsSearchResult {
-  id: string;
-  title: string;
-  content: string;
-  category?: string;
-  relevanceScore?: number;
-  planType?: string;
-  clientId?: string;
-  searchableContent?: string;
-  lastUpdated?: string;
-}
+// BenefitsDocument is imported from azure-search.ts
 
 // Add this helper function to ensure tool functions are properly typed
 function createResilientTool<T extends Record<string, any>, U>(
