@@ -507,5 +507,3 @@ function createResilientTool<T extends Record<string, any>, U>(
     }
   };
 }
-  };
-}
