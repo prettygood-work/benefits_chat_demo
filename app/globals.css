@@ -20,6 +20,11 @@
     .text-balance {
         text-wrap: balance;
     }
+  
+    /* custom opacity-20 fg background */
+    .bg-foreground\/20 {
+      background-color: rgba(var(--foreground-rgb), 0.2);
+    }
 }
 
 @layer base {
