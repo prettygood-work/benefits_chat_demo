@@ -214,7 +214,7 @@ export function PlanComparisonArtifact({
           <div className="flex items-center gap-2 text-blue-700">
             <CheckCircle className="h-5 w-5" />
             <span className="font-medium">
-              Great choice! You've selected the {plans.find(p => p.id === selectedPlan)?.name} plan.
+              Great choice! You&apos;ve selected the {plans.find(p => p.id === selectedPlan)?.name} plan.
             </span>
           </div>
           <p className="text-sm text-blue-600 mt-1">

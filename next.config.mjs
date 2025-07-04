@@ -2,8 +2,6 @@
 const nextConfig = {
   experimental: {
     ppr: true,
-    // Disable instrumentation to prevent conflicts
-    instrumentationHook: false,
   },
   
   // Webpack optimization for Vercel
