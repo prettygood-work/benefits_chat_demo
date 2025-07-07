@@ -1,62 +1,119 @@
-<a href="https://chat.vercel.ai/">
-  <img alt="Next.js 14 and App Router-ready AI chatbot." src="app/(chat)/opengraph-image.png">
-  <h1 align="center">Chat SDK</h1>
-</a>
+# Benefits Advisory Platform
 
-<p align="center">
-    Chat SDK is a free, open-source template built with Next.js and the AI SDK that helps you quickly build powerful chatbot applications.
-</p>
+A sophisticated multi-tenant benefits advisory chatbot that helps employees understand and select their health insurance benefits through AI-powered conversations.
 
-<p align="center">
-  <a href="https://chat-sdk.dev"><strong>Read Docs</strong></a> ·
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#model-providers"><strong>Model Providers</strong></a> ·
-  <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
-  <a href="#running-locally"><strong>Running locally</strong></a>
-</p>
-<br/>
+## 🎯 Project Overview
 
-## Features
+This platform transforms how employees interact with their benefits by providing:
 
-- [Next.js](https://nextjs.org) App Router
-  - Advanced routing for seamless navigation and performance
-  - React Server Components (RSCs) and Server Actions for server-side rendering and increased performance
-- [AI SDK](https://sdk.vercel.ai/docs)
-  - Unified API for generating text, structured objects, and tool calls with LLMs
-  - Hooks for building dynamic chat and generative user interfaces
-  - Supports xAI (default), OpenAI, Fireworks, and other model providers
-- [shadcn/ui](https://ui.shadcn.com)
-  - Styling with [Tailwind CSS](https://tailwindcss.com)
-  - Component primitives from [Radix UI](https://radix-ui.com) for accessibility and flexibility
-- Data Persistence
-  - [Neon Serverless Postgres](https://vercel.com/marketplace/neon) for saving chat history and user data
-  - [Vercel Blob](https://vercel.com/storage/blob) for efficient file storage
-- [Auth.js](https://authjs.dev)
-  - Simple and secure authentication
+- **For Employees**: Natural conversation-based benefits guidance with visual plan comparisons
+- **For Employers**: White-labeled solution with comprehensive analytics and insights
+- **For Administrators**: Multi-tenant management with real-time monitoring
 
-## Model Providers
+## 🏗️ Architecture
 
-This template ships with [xAI](https://x.ai) `grok-2-1212` as the default chat model. However, with the [AI SDK](https://sdk.vercel.ai/docs), you can switch LLM providers to [OpenAI](https://openai.com), [Anthropic](https://anthropic.com), [Cohere](https://cohere.com/), and [many more](https://sdk.vercel.ai/providers/ai-sdk-providers) with just a few lines of code.
+┌─────────────────────┐     ┌─────────────────────┐     ┌─────────────────────┐
+│   Next.js 15 App    │────▶│  Vercel AI SDK      │────▶│   OpenAI GPT-4      │
+│  (App Router)       │     │  + Streaming        │     │  Benefits Expert    │
+└─────────────────────┘     └─────────────────────┘     └─────────────────────┘
+│                           │                           │
+▼                           ▼                           ▼
+┌─────────────────────┐     ┌─────────────────────┐     ┌─────────────────────┐
+│  Vercel Postgres    │────▶│   Azure Cognitive   │────▶│   Vercel Blob       │
+│  + Drizzle ORM      │     │   Search (RAG)      │     │  Document Storage   │
+└─────────────────────┘     └─────────────────────┘     └─────────────────────┘
 
-## Deploy Your Own
+## 🚀 Tech Stack
 
-You can deploy your own version of the Next.js AI Chatbot to Vercel with one click:
+- **Framework**: Next.js 15.3.0 (App Router)
+- **UI**: shadcn/ui + Tailwind CSS + Framer Motion
+- **Database**: Vercel Postgres with Drizzle ORM
+- **AI**: Vercel AI SDK + OpenAI GPT-4
+- **Search**: Azure Cognitive Search
+- **Auth**: NextAuth.js
+- **Hosting**: Vercel Edge Functions
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fai-chatbot&env=AUTH_SECRET&envDescription=Learn+more+about+how+to+get+the+API+Keys+for+the+application&envLink=https%3A%2F%2Fgithub.com%2Fvercel%2Fai-chatbot%2Fblob%2Fmain%2F.env.example&demo-title=AI+Chatbot&demo-description=An+Open-Source+AI+Chatbot+Template+Built+With+Next.js+and+the+AI+SDK+by+Vercel.&demo-url=https%3A%2F%2Fchat.vercel.ai&products=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22ai%22%2C%22productSlug%22%3A%22grok%22%2C%22integrationSlug%22%3A%22xai%22%7D%2C%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22productSlug%22%3A%22neon%22%2C%22integrationSlug%22%3A%22neon%22%7D%2C%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22productSlug%22%3A%22upstash-kv%22%2C%22integrationSlug%22%3A%22upstash%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D)
+## 📋 Prerequisites
 
-## Running locally
+- Node.js 18.17 or later
+- pnpm 8.0 or later
+- Vercel account
+- OpenAI API key
+- Azure Cognitive Search instance
+- PostgreSQL database (via Vercel)
 
-You will need to use the environment variables [defined in `.env.example`](.env.example) to run Next.js AI Chatbot. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables) for this, but a `.env` file is all that is necessary.
+## 🛠️ Setup Instructions
 
-> Note: You should not commit your `.env` file or it will expose secrets that will allow others to control access to your various AI and authentication provider accounts.
-
-1. Install Vercel CLI: `npm i -g vercel`
-2. Link local instance with Vercel and GitHub accounts (creates `.vercel` directory): `vercel link`
-3. Download your environment variables: `vercel env pull`
+### 1. Clone and Install
 
 ```bash
+git clone <repository-url>
+cd benefits-advisory-platform
 pnpm install
-pnpm dev
-```
+2. Environment Variables
+Create .env.local with:
+env# Database
+DATABASE_URL="postgres://..."
 
-Your app template should now be running on [localhost:3000](http://localhost:3000).
+# OpenAI
+OPENAI_API_KEY="sk-..."
+
+# Azure Search
+AZURE_SEARCH_ENDPOINT="https://..."
+AZURE_SEARCH_KEY="..."
+AZURE_SEARCH_INDEX="benefits-index"
+
+# Auth
+AUTH_SECRET="..." # Generate with: openssl rand -base64 32
+NEXTAUTH_URL="http://localhost:3000"
+
+# Vercel Blob
+BLOB_READ_WRITE_TOKEN="..."
+3. Database Setup
+bash# Push schema to database
+pnpm db:push
+
+# Run migrations
+pnpm db:migrate
+
+# Seed with demo data (optional)
+pnpm db:seed
+4. Azure Search Setup
+bash# Create search index
+pnpm search:create-index
+
+# Test search connection
+pnpm search:test
+5. Development
+bash# Start development server
+pnpm dev
+
+# Run tests
+pnpm test
+
+# Type checking
+pnpm type-check
+
+# Linting
+pnpm lint
+📁 Project Structure
+├── app/
+│   ├── [tenant]/          # Tenant-specific chat interface
+│   ├── admin/             # Admin dashboard
+│   │   ├── [tenantId]/    # Tenant management
+│   │   └── analytics/     # Cross-client analytics
+│   └── api/               # API routes
+│       ├── chat/          # Chat streaming endpoint
+│       ├── search/        # Azure search integration
+│       └── admin/         # Admin APIs
+├── components/
+│   ├── benefits/          # Plan cards, comparisons
+│   ├── chat/              # Chat UI components
+│   └── admin/             # Admin components
+├── lib/
+│   ├── ai/                # AI prompts and logic
+│   ├── azure-search/      # Search client and indexing
+│   ├── db/                # Database schema and queries
+│   ├── recommendations/   # Recommendation engine
+│   └── analytics/         # Analytics engine
+└── tests/                 # Test files by phase

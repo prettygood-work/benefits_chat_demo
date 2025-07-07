@@ -1,0 +1,1 @@
+-- Migration SQL as detailed above: creates Tenant, TenantUser, TenantChat tables with constraints, indexes, and updated_at trigger.

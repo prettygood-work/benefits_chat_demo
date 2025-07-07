@@ -162,3 +162,77 @@
 .suggestion-highlight {
     @apply bg-blue-200 hover:bg-blue-300 dark:hover:bg-blue-400/50 dark:text-blue-50 dark:bg-blue-500/40;
 }
+
+/* Append tenant-specific theming, tenant chat styles, admin dashboard styles, hover effects, loading shimmer */
+
+/* Tenant-specific theming */
+.tenant-themed {
+  /* Override default theme colors with tenant colors */
+  --primary: var(--tenant-primary);
+  --primary-foreground: hsl(0 0% 98%);
+  
+  --secondary: var(--tenant-secondary);
+  --secondary-foreground: hsl(0 0% 98%);
+  
+  --accent: var(--tenant-accent);
+  --accent-foreground: hsl(0 0% 9%);
+  
+  --background: var(--tenant-background);
+  --foreground: var(--tenant-foreground);
+  
+  --muted: var(--tenant-muted);
+  --muted-foreground: var(--tenant-muted-foreground);
+  
+  --card: var(--tenant-card);
+  --card-foreground: var(--tenant-card-foreground);
+  
+  --border: var(--tenant-border);
+  --radius: var(--tenant-radius);
+}
+
+/* Tenant chat specific styles */
+.tenant-chat {
+  font-family: var(--tenant-font-sans, var(--font-geist));
+}
+
+.tenant-chat code,
+.tenant-chat pre {
+  font-family: var(--tenant-font-mono, var(--font-geist-mono));
+}
+
+/* Admin dashboard styles */
+.admin-sidebar {
+  @apply bg-gray-900 text-gray-100;
+}
+
+.admin-sidebar a {
+  @apply hover:bg-gray-800 transition-colors;
+}
+
+.admin-sidebar a.active {
+  @apply bg-gray-800 border-l-4 border-blue-500;
+}
+
+/* Tenant card hover effects */
+.tenant-card {
+  @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5;
+}
+
+/* Loading states */
+.loading-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 2s infinite;
+  transform: translateX(-100%);
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
