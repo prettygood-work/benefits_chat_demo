@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAnalyticsEventsByClientId } from '@/lib/db/queries';
 import { ChatSDKError } from '@/lib/errors';
 
+// Force Node.js runtime for database operations
+export const runtime = 'nodejs';
+
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const from = new Date(searchParams.get('from') || Date.now() - 30 * 24 * 60 * 60 * 1000);

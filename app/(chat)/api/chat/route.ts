@@ -1,3 +1,5 @@
+// Force Node.js runtime for database operations and AI calls
+export const runtime = 'nodejs';
 import {
   convertToModelMessages,
   createUIMessageStream,
@@ -44,8 +46,6 @@ import type { ChatModel } from '@/lib/ai/models';
 import type { VisibilityType } from '@/components/visibility-selector';
 import { z } from 'zod';
 import type { BenefitsDocument } from '@/lib/azure-search';
-
-export const runtime = 'nodejs';
 
 export const maxDuration = 60;
 

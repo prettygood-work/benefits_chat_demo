@@ -4,6 +4,8 @@ import {
   getMessagesByChatId,
   getStreamIdsByChatId,
 } from '@/lib/db/queries';
+
+export const runtime = 'nodejs';
 import type { Chat } from '@/lib/db/schema';
 import { ChatSDKError } from '@/lib/errors';
 import type { ChatMessage } from '@/lib/types';

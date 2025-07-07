@@ -1,11 +1,4 @@
-// Edge-compatible password comparison using Web Crypto API
-async function comparePassword(plain: string, hash: string): Promise<boolean> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(plain);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const computed = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
-  return computed === hash;
-}
+import { verifyPassword } from '@/lib/db/utils';
 import NextAuth, { type DefaultSession } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { createGuestUser, getUser } from '@/lib/db/queries';
@@ -58,11 +51,11 @@ export const {
         const [user] = users;
 
         if (!user.password) {
-          await comparePassword(password, DUMMY_PASSWORD);
+          await verifyPassword(password, DUMMY_PASSWORD);
           return null;
         }
 
-        const passwordsMatch = await comparePassword(password, user.password);
+        const passwordsMatch = await verifyPassword(password, user.password);
 
         if (!passwordsMatch) return null;
 
