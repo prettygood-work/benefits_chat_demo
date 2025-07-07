@@ -1,8 +1,8 @@
-import { LRUCache } from 'lru-cache';
+import LRU from 'lru-cache';
 import type { Tenant } from './db/schema';
 
 // Create tenant cache with 10-minute TTL
-const tenantCache = new LRUCache<string, Tenant>({
+const tenantCache = new LRU<string, Tenant>({
   max: 100, // Maximum 100 tenants in cache
   ttl: 1000 * 60 * 10, // 10 minutes
 });

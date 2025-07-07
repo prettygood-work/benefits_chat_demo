@@ -4,8 +4,8 @@ import Credentials from 'next-auth/providers/credentials';
 import {
   createGuestUser,
   getUser,
-  userCanAccessTenant,
 } from '@/lib/db/queries';
+import { userCanAccessTenant } from '@/lib/db/queries/tenants';
 import { authConfig } from './auth.config';
 import { DUMMY_PASSWORD } from '@/lib/constants';
 import type { DefaultJWT } from 'next-auth/jwt';
@@ -117,6 +117,9 @@ export const {
     },
   },
 });
+
+// Force Node.js runtime (avoid Edge API issues with bcrypt-ts)
+export const runtime = 'nodejs';
 
 // Fix the tenant authentication helper
 export async function getTenantAuth(tenantId?: string) {
