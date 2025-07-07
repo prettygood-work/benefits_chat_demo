@@ -4,7 +4,9 @@
       "Bash(npm run lint)",
       "Bash(pnpm add:*)",
       "Bash(pnpm format:*)",
-      "Bash(pnpm build:*)"
+      "Bash(pnpm build:*)",
+      "Bash(find:*)",
+      "Bash(pnpm type-check:*)"
     ],
     "deny": []
   }

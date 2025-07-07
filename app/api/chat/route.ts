@@ -1,19 +1,21 @@
-import { auth } from '@/lib/auth';
+import { streamText } from 'ai';
+import { auth } from '@/app/(auth)/auth';
 import {
   userCanAccessTenant,
   associateChatWithTenant,
 } from '@/lib/db/queries/tenants';
 import { NextRequest, NextResponse } from 'next/server';
+import { myProvider } from '@/lib/ai/providers';
+import { generateUUID } from '@/lib/utils';
 
-// This is the complete, updated file
 export async function POST(request: NextRequest) {
   try {
     // Get auth session
     const session = await auth();
-
+    
     // Extract tenant context
     const tenantId = request.headers.get('X-Tenant-ID');
-
+    
     // If tenant context exists, validate access
     if (tenantId) {
       if (!session?.user) {
@@ -32,16 +34,38 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Continue with existing chat logic...
-    // ... (existing code) ...
+    const { messages, model = 'gpt-4-turbo-preview', ...otherParams } = await request.json();
+    
+    // Generate chat ID if not provided
+    const chatId = generateUUID();
+    
+    // Stream the AI response
+    const result = await streamText({
+      model: myProvider(model),
+      messages,
+      ...otherParams,
+    });
 
-    // After saving chat and before streaming response, associate with tenant
+    // Associate chat with tenant if applicable
     if (tenantId && chatId) {
-      await associateChatWithTenant(chatId, tenantId);
+      try {
+        await associateChatWithTenant(chatId, tenantId);
+      } catch (error) {
+        console.error('Failed to associate chat with tenant:', error);
+        // Don't fail the request for this
+      }
     }
 
-    // ... (rest of existing code) ...
+    return result.toDataStreamResponse({
+      headers: {
+        'X-Chat-ID': chatId,
+      },
+    });
   } catch (error) {
-    // ... (existing error handling) ...
+    console.error('Chat API error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
