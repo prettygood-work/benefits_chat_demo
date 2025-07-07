@@ -19,8 +19,7 @@
     "db:check": "drizzle-kit check",
     "db:up": "drizzle-kit up",
     "test": "PLAYWRIGHT=true pnpm exec playwright test",
-    "test:ui": "PLAYWRIGHT=true pnpm exec playwright test --ui",
-    "prepare": "pnpm lint:fix && pnpm format && pnpm type-check"
+    "test:ui": "PLAYWRIGHT=true pnpm exec playwright test --ui"
   },
   "dependencies": {
     "@ai-sdk/provider": "2.0.0-beta.1",
@@ -51,6 +50,7 @@
     "@vercel/postgres": "^0.10.0",
     "ai": "5.0.0-beta.6",
     "bcrypt-ts": "^5.0.2",
+    "biome": "^0.3.3",
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",

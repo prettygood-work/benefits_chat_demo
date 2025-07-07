@@ -5,7 +5,7 @@ import Image from 'next/image';
 import type { Tenant, User } from '@/lib/db/schema';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { LogOut, Menu } from 'lucide-react';
+import { LogOut, } from 'lucide-react';
 
 interface TenantChatHeaderProps {
   tenant: Tenant;

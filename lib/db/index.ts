@@ -4,7 +4,8 @@ import postgres from 'postgres';
 import * as schema from './schema';
 
 // Create postgres client with connection URL
-const client = postgres(process.env.POSTGRES_URL || '');
+// biome-ignore lint/style/noNonNullAssertion: Environment variable is required
+const client = postgres(process.env.POSTGRES_URL!);
 
 // Create drizzle client with schema
 export const db = drizzle(client, { schema });

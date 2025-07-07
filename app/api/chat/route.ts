@@ -4,7 +4,7 @@ import {
   userCanAccessTenant,
   associateChatWithTenant,
 } from '@/lib/db/queries/tenants';
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { myProvider } from '@/lib/ai/providers';
 import { generateUUID } from '@/lib/utils';
 
@@ -12,10 +12,10 @@ export async function POST(request: NextRequest) {
   try {
     // Get auth session
     const session = await auth();
-    
+
     // Extract tenant context
     const tenantId = request.headers.get('X-Tenant-ID');
-    
+
     // If tenant context exists, validate access
     if (tenantId) {
       if (!session?.user) {
@@ -34,11 +34,15 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const { messages, model = 'gpt-4-turbo-preview', ...otherParams } = await request.json();
-    
+    const {
+      messages,
+      model = 'gpt-4-turbo-preview',
+      ...otherParams
+    } = await request.json();
+
     // Generate chat ID if not provided
     const chatId = generateUUID();
-    
+
     // Stream the AI response
     const result = await streamText({
       model: myProvider(model),
@@ -65,7 +69,7 @@ export async function POST(request: NextRequest) {
     console.error('Chat API error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

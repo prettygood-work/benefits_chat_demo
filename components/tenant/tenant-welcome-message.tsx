@@ -43,19 +43,19 @@ export function TenantWelcomeMessage({ tenant }: TenantWelcomeMessageProps) {
             <div className="mt-6 grid gap-2 text-left text-sm text-muted-foreground">
               <p className="flex items-center gap-2">
                 <span className="rounded-full bg-primary/10 p-1">
-                  <span className="block size-1.5 rounded-full bg-primary"></span>
+                  <span className="block size-1.5 rounded-full bg-primary" />
                 </span>
                 Ask about your benefits coverage
               </p>
               <p className="flex items-center gap-2">
                 <span className="rounded-full bg-primary/10 p-1">
-                  <span className="block size-1.5 rounded-full bg-primary"></span>
+                  <span className="block size-1.5 rounded-full bg-primary" />
                 </span>
                 Find in-network providers
               </p>
               <p className="flex items-center gap-2">
                 <span className="rounded-full bg-primary/10 p-1">
-                  <span className="block size-1.5 rounded-full bg-primary"></span>
+                  <span className="block size-1.5 rounded-full bg-primary" />
                 </span>
                 Get help with claims and billing
               </p>

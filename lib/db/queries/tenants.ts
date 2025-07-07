@@ -1,12 +1,11 @@
 import 'server-only';
 
-import { and, eq, inArray, desc, asc, lt } from 'drizzle-orm';
+import { and, eq, desc, lt } from 'drizzle-orm';
 import { db } from '@/lib/db';
 import { tenant, tenantUser, tenantChat, user, chat } from '../schema';
 import type {
   Tenant,
   TenantUser,
-  NewTenant,
   TenantChat,
   Chat,
 } from '../schema';
