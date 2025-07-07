@@ -4,9 +4,16 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import { ThemeProvider as BenefitsThemeProvider } from '@/lib/theme-manager';
 import { ErrorBoundary } from '@/components/error-boundary';
+import { validateEnvironment, logValidationResults } from '@/lib/env-validation';
 
 import './globals.css';
 import { SessionProvider } from 'next-auth/react';
+
+// Validate environment on startup (only in development or when not building)
+if (typeof window === 'undefined' && process.env.NODE_ENV !== 'production' && !process.env.VERCEL_ENV) {
+  const validationResult = validateEnvironment();
+  logValidationResults(validationResult);
+}
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://chat.vercel.ai'),

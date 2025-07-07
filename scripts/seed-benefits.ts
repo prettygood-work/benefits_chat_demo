@@ -1,8 +1,11 @@
 import { saveBenefitsPlan, saveClientConfig, saveAnalyticsEvent } from '@/lib/db/queries';
 
+// Get client ID from environment or use default for development
+const CLIENT_ID = process.env.DEFAULT_CLIENT_ID || 'development-client';
+
 const samplePlans = [
   {
-    clientId: 'default-client',
+    clientId: CLIENT_ID,
     name: 'Premium PPO Plus',
     type: 'PPO' as const,
     description: 'Comprehensive coverage with maximum flexibility and nationwide access',
@@ -15,7 +18,7 @@ const samplePlans = [
     networkName: 'National Health Network'
   },
   {
-    clientId: 'default-client', 
+    clientId: CLIENT_ID, 
     name: 'Essential HMO',
     type: 'HMO' as const,
     description: 'Cost-effective managed care with coordinated services',
@@ -28,7 +31,7 @@ const samplePlans = [
     networkName: 'Regional Care Network'
   },
   {
-    clientId: 'default-client',
+    clientId: CLIENT_ID,
     name: 'Health Savings HDHP',
     type: 'HDHP' as const, 
     description: 'High-deductible plan with HSA eligibility for tax savings',
@@ -41,7 +44,7 @@ const samplePlans = [
     networkName: 'Value Health Network'
   },
   {
-    clientId: 'default-client',
+    clientId: CLIENT_ID,
     name: 'Balanced EPO',
     type: 'EPO' as const,
     description: 'Exclusive provider network with good coverage balance',
@@ -96,25 +99,25 @@ const sampleClientConfig = {
 const sampleAnalyticsEvents = [
   {
     sessionId: 'session-001',
-    clientId: 'default-client',
+    clientId: CLIENT_ID,
     eventType: 'conversation_start' as const,
     metadata: { userAgent: 'test', source: 'web' }
   },
   {
     sessionId: 'session-001', 
-    clientId: 'default-client',
+    clientId: CLIENT_ID,
     eventType: 'plan_compared' as const,
     metadata: { plansCompared: ['1', '2'], familySize: 2 }
   },
   {
     sessionId: 'session-002',
-    clientId: 'default-client', 
+    clientId: CLIENT_ID, 
     eventType: 'conversation_start' as const,
     metadata: { userAgent: 'test', source: 'web' }
   },
   {
     sessionId: 'session-002',
-    clientId: 'default-client',
+    clientId: CLIENT_ID,
     eventType: 'cost_calculated' as const,
     metadata: { planType: 'PPO', familySize: 1 }
   }

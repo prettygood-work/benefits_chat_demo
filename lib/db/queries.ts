@@ -39,6 +39,7 @@ import {
 import type { ArtifactKind } from '@/components/artifact';
 import { generateUUID } from '../utils';
 import { generateHashedPassword } from './utils';
+import { generateGuestPassword } from '../constants';
 import type { VisibilityType } from '@/components/visibility-selector';
 import { ChatSDKError } from '../errors';
 
@@ -53,37 +54,41 @@ let retryCount = 0;
 const MAX_RETRIES = 3;
 
 function initializeDatabase() {
-  try {
-    // For build time or when env var is missing, use placeholder
-    if (!process.env.POSTGRES_URL) {
-      console.warn('POSTGRES_URL not set, using mock database for build');
-      return createMockDatabase();
+  if (!process.env.POSTGRES_URL) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('POSTGRES_URL is required in production environment');
     }
-    
-    const client = postgres(process.env.POSTGRES_URL);
+    console.warn('POSTGRES_URL not set, database operations will fail');
+    // Return a client that will throw errors for all operations
+    return createFailureDatabase();
+  }
+  
+  try {
+    const client = postgres(process.env.POSTGRES_URL, {
+      max: 20,
+      idle_timeout: 20,
+      connect_timeout: 10,
+    });
     return drizzle(client);
   } catch (error) {
-    console.error(`Failed to initialize database connection (attempt ${retryCount+1}/${MAX_RETRIES}):`, error);
-    
-    if (retryCount < MAX_RETRIES) {
-      retryCount++;
-      console.log(`Retrying database connection in 1 second...`);
-      // Wait and retry
-      setTimeout(initializeDatabase, 1000);
+    console.error('Failed to initialize database connection:', error);
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error(`Database connection failed: ${error}`);
     }
-    
-    return createMockDatabase();
+    return createFailureDatabase();
   }
 }
 
-function createMockDatabase() {
-  console.warn('Using mock database implementation');
-  // Create a mock implementation for build time or when connection fails
+function createFailureDatabase() {
+  const throwError = () => {
+    throw new ChatSDKError('bad_request:database', 'Database not configured - POSTGRES_URL required');
+  };
+  
   return {
-    select: () => ({ from: () => ({ where: () => [] }) }),
-    insert: () => ({ values: () => ({ returning: () => [] }) }),
-    delete: () => ({ where: () => ({ returning: () => [] }) }),
-    update: () => ({ set: () => ({ where: () => ({ returning: () => [] }) }) })
+    select: throwError,
+    insert: throwError,
+    delete: throwError,
+    update: throwError
   } as any;
 }
 
@@ -101,8 +106,7 @@ export async function getUser(email: string): Promise<Array<User>> {
 }
 
 export async function createUser(email: string, password: string) {
-  const hashedPassword = generateHashedPassword(password);
-
+  const hashedPassword = await generateHashedPassword(password);
   try {
     return await db.insert(user).values({ email, password: hashedPassword });
   } catch (error) {
@@ -110,10 +114,13 @@ export async function createUser(email: string, password: string) {
   }
 }
 
+// Create a guest user with a random email and secure password
 export async function createGuestUser() {
-  const email = `guest-${Date.now()}`;
-  const password = generateHashedPassword(generateUUID());
-
+  const timestamp = Date.now();
+  const randomSuffix = Math.random().toString(36).substring(2, 8);
+  const email = `guest-${timestamp}-${randomSuffix}`;
+  // Generate a secure random password for the guest user
+  const password = await generateGuestPassword();
   try {
     return await db.insert(user).values({ email, password }).returning({
       id: user.id,
@@ -126,6 +133,7 @@ export async function createGuestUser() {
     );
   }
 }
+
 
 export async function saveChat({
   id,

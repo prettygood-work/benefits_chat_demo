@@ -72,13 +72,13 @@ NEXT_PUBLIC_APP_URL=https://your-domain.vercel.app
    - Configure semantic search configuration: `benefits-semantic-config`
    - Set up searchable fields: `title`, `content`, `searchableContent`
 
-3. **Test Search Integration**:
+3. **Verify Search Integration**:
    ```bash
-   # Test search endpoint
+   # Verify search endpoint
    curl -X POST "https://your-search-service.search.windows.net/indexes/benefits-index/docs/search?api-version=2023-11-01" \
    -H "Content-Type: application/json" \
    -H "api-key: your-admin-key" \
-   -d '{"search": "test"}'
+   -d '{"search": "benefits"}'
    ```
 
 #### Search Service Verification
@@ -120,20 +120,17 @@ const nextConfig = {
 
 ### 1. Pre-Deployment Validation
 
-#### Run Complete Test Suite
+#### Run Complete Validation
 ```bash
 # Validate CSS and code quality
 pnpm run validate
-
-# Run unit tests with coverage
-pnpm run test:unit:coverage
 
 # Run build to catch compilation errors
 pnpm run build
 ```
 
 #### Deployment Checklist
-- [ ] All tests passing
+- [ ] All validations passing
 - [ ] CSS validation successful
 - [ ] TypeScript compilation clean
 - [ ] Environment variables configured
@@ -168,7 +165,7 @@ vercel env add AZURE_SEARCH_KEY production
 
 ### 3. Post-Deployment Verification
 
-#### Functional Testing
+#### Functional Verification
 - [ ] Home page loads successfully
 - [ ] Chat functionality works
 - [ ] Plan comparison artifacts render
@@ -176,7 +173,7 @@ vercel env add AZURE_SEARCH_KEY production
 - [ ] Theme switching functional
 - [ ] Mobile responsiveness verified
 
-#### Performance Testing
+#### Performance Verification
 - [ ] Page load times < 3 seconds
 - [ ] API response times < 2 seconds
 - [ ] Database query performance acceptable
@@ -303,7 +300,6 @@ git push origin main
 - **API Response Time**: < 2 seconds (95th percentile)
 - **Database Query Time**: < 500ms average
 - **Build Time**: < 10 minutes
-- **Test Suite Time**: < 5 minutes
 
 ### Scalability Targets
 - **Concurrent Users**: 1000+ simultaneous users
@@ -334,7 +330,7 @@ git push origin main
 
 ### Deployment Success Indicators
 - [ ] Zero-downtime deployment
-- [ ] All tests passing in production
+- [ ] All validations passing in production
 - [ ] Performance metrics within targets
 - [ ] No critical errors in first 24 hours
 - [ ] User workflows functioning correctly

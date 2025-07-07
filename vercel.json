@@ -1,17 +1,10 @@
 {
-  "name": "benefits-chatbot-demo",
-  "version": 2,
   "buildCommand": "pnpm run build",
   "installCommand": "pnpm install --frozen-lockfile",
+  "framework": "nextjs",
   "functions": {
-    "app/api/**/*.ts": {
-      "maxDuration": 30,
-      "memory": 1024
-    }
-  },
-  "build": {
-    "env": {
-      "NODE_OPTIONS": "--max-old-space-size=4096"
+    "app/api/**/*": {
+      "maxDuration": 30
     }
   }
 }

@@ -46,8 +46,12 @@ export async function searchBenefitsContent(
   } = {}
 ): Promise<BenefitsDocument[]> {
   if (!searchClient) {
-    console.warn('Azure Search client not initialized, returning mock data');
-    return getMockSearchResults(query, clientId);
+    if (process.env.NODE_ENV === 'production') {
+      console.error('Azure Search not configured in production. Configure AZURE_SEARCH_ENDPOINT and AZURE_SEARCH_KEY');
+      return [];
+    }
+    console.warn('Azure Search client not initialized, returning empty results');
+    return [];
   }
 
   try {
@@ -87,7 +91,12 @@ export async function searchBenefitsContent(
     return documents;
   } catch (error) {
     console.error('Azure Search error:', error);
-    return getMockSearchResults(query, clientId);
+    if (process.env.NODE_ENV === 'production') {
+      // In production, log the error but return empty results instead of mock data
+      console.error('Production Azure Search failure - returning empty results');
+      return [];
+    }
+    return [];
   }
 }
 
@@ -126,54 +135,7 @@ export async function deleteBenefitsDocument(documentId: string): Promise<void> 
   }
 }
 
-// Mock data for development/testing when Azure Search is not available
-function getMockSearchResults(query: string, clientId: string): BenefitsDocument[] {
-  const mockDocuments: BenefitsDocument[] = [
-    {
-      id: 'mock-1',
-      title: 'HMO vs PPO Plan Comparison',
-      content: 'HMO plans require referrals for specialists but offer lower costs. PPO plans provide more flexibility to see specialists without referrals but typically have higher premiums.',
-      category: 'plan_details',
-      planType: 'general',
-      clientId,
-      tags: ['HMO', 'PPO', 'comparison', 'specialists', 'referrals'],
-      lastUpdated: new Date().toISOString(),
-      relevanceScore: 0.9
-    },
-    {
-      id: 'mock-2',
-      title: 'Understanding Deductibles and Out-of-Pocket Maximums',
-      content: 'Your deductible is the amount you pay before insurance starts covering costs. The out-of-pocket maximum is the most you\'ll pay in a year for covered services.',
-      category: 'costs',
-      planType: 'general',
-      clientId,
-      tags: ['deductible', 'out-of-pocket', 'costs', 'coverage'],
-      lastUpdated: new Date().toISOString(),
-      relevanceScore: 0.8
-    },
-    {
-      id: 'mock-3',
-      title: 'Enrollment Periods and Deadlines',
-      content: 'Open enrollment typically runs from November to December. You can also enroll during special enrollment periods triggered by life events like marriage or job changes.',
-      category: 'enrollment',
-      planType: 'general',
-      clientId,
-      tags: ['enrollment', 'deadlines', 'life events', 'open enrollment'],
-      lastUpdated: new Date().toISOString(),
-      relevanceScore: 0.7
-    }
-  ];
-
-  // Simple relevance scoring based on query terms
-  const queryTerms = query.toLowerCase().split(' ');
-  return mockDocuments
-    .filter(doc => {
-      const searchText = `${doc.title} ${doc.content} ${doc.tags?.join(' ') || ''}`.toLowerCase();
-      return queryTerms.some(term => searchText.includes(term));
-    })
-    .sort((a, b) => (b.relevanceScore || 0) - (a.relevanceScore || 0))
-    .slice(0, 5);
-}
+// Production search result formatter - no mock data
 
 export function formatSearchResultsForPrompt(results: BenefitsDocument[]): string {
   if (!results || results.length === 0) {

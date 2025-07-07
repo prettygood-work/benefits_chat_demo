@@ -6,15 +6,6 @@ const nextConfig = {
   
   // Webpack optimization for Vercel
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Add a fallback for the 'self' object on the server
-    if (isServer) {
-      config.plugins.push(
-        new webpack.DefinePlugin({
-          self: 'global',
-        })
-      );
-    }
-    
     // Fix instrumentation conflicts by preventing duplicate chunk emissions
     config.resolve.fallback = {
       ...config.resolve.fallback,
@@ -23,7 +14,7 @@ const nextConfig = {
       os: false,
     };
     
-    // Prevent duplicate chunk emissions with more specific configuration
+    // Remove OpenTelemetry chunk splitting and cache group
     config.optimization = {
       ...config.optimization,
       splitChunks: {
@@ -43,26 +34,20 @@ const nextConfig = {
             reuseExistingChunk: true,
             maxSize: 200000,
           },
-          // Prevent instrumentation conflicts
-          otel: {
-            test: /[\\/]node_modules[\\/](@opentelemetry|@vercel\/otel)/,
-            name: 'otel',
-            priority: 15,
-            reuseExistingChunk: true,
-          },
         },
       },
     };
     
-    // Explicitly exclude instrumentation from client bundles
-    if (!isServer) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        '@vercel/otel': false,
-        '@opentelemetry/api': false,
-        '@opentelemetry/api-logs': false,
-      };
-    }
+    // Explicitly exclude OpenTelemetry from all bundles (client and server)
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@vercel/otel': false,
+      '@opentelemetry/api': false,
+      '@opentelemetry/api-logs': false,
+      '@opentelemetry/resources': false,
+      '@opentelemetry/instrumentation': false,
+      '@opentelemetry/sdk-logs': false,
+    };
     
     return config;
   },

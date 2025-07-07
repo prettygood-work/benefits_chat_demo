@@ -76,7 +76,7 @@ export function PlanComparisonArtifact({
   };
 
   return (
-    <div className="w-full space-y-6 p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg">
+    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-lg space-y-6 w-full">
       <div className="text-center space-y-2">
         <h2 className="text-2xl font-bold text-gray-900">Health Plan Comparison</h2>
         <p className="text-gray-600">

@@ -26,7 +26,8 @@
       "Bash(vercel:*)",
       "Bash(timeout 30s npx next build:*)",
       "Bash(timeout 20s pnpm run lint)",
-      "Bash(gtimeout:*)"
+      "Bash(gtimeout:*)",
+      "Bash(python3:*)"
     ]
   },
   "enableAllProjectMcpServers": false
