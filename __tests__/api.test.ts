@@ -1,43 +1,24 @@
-import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
-import { NextRequest } from 'next/server';
-import { GET } from '@/app/api/analytics/route';
 
-// Mock dependencies
-jest.mock('@/lib/db/queries', () => ({
-  getAnalyticsEventsByClientId: jest.fn(),
-}));
 
-jest.mock('@/app/(auth)/auth', () => ({
-  auth: jest.fn(),
-}));
 
-const { getAnalyticsEventsByClientId } = require('@/lib/db/queries');
 
-describe('API Route Integration Tests', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
 
-  describe('Analytics API Route', () => {
-    it('returns analytics data successfully', async () => {
-      const mockEvents = [
-        {
-          id: '1',
-          sessionId: 'session-1',
-          clientId: 'test-client',
-          eventType: 'conversation_start',
-          metadata: {},
-          timestamp: new Date('2024-01-01')
-        },
-        {
-          id: '2', 
-          sessionId: 'session-1',
-          clientId: 'test-client',
-          eventType: 'plan_compared',
-          metadata: { plansCompared: ['1', '2'] },
-          timestamp: new Date('2024-01-01')
-        }
-      ];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// This file previously contained Jest-based tests and mocks.
+// Jest and related test code have been removed as requested.
 
       getAnalyticsEventsByClientId.mockResolvedValue(mockEvents);
 

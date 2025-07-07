@@ -1597,7 +1597,7 @@ function generateHourlyDistribution(events: any[]) {
 1. **Create `__tests__/benefits.test.ts`:**
 
 ```typescript
-import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
+// ...existing code...
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { PlanComparisonArtifact } from '@/components/benefits/plan-comparison-artifact';
 import { searchBenefitsContent, formatSearchResultsForPrompt } from '@/lib/azure-search';
@@ -1693,7 +1693,7 @@ describe('Benefits System Integration Tests', () => {
     });
 
     it('handles plan selection', async () => {
-      const onPlanSelect = jest.fn();
+// ...existing code...
       
       render(
         <PlanComparisonArtifact 

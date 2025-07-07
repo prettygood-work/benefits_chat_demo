@@ -15,14 +15,11 @@
     "db:check": "drizzle-kit check",
     "db:up": "drizzle-kit up",
     "test": "export PLAYWRIGHT=True && pnpm exec playwright test",
-    "test:unit": "jest",
-    "test:unit:watch": "jest --watch",
-    "test:unit:coverage": "jest --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "test:all": "npm run test:unit && npm run test:e2e",
-    "validate": "node scripts/validate-css.js && npm run lint",
-    "pre-deploy": "npm run validate && npm run test:unit && npm run build"
+    "test:all": "pnpm run test:e2e",
+    "validate": "node scripts/validate-css.js && pnpm run lint",
+    "pre-deploy": "pnpm run validate && pnpm run build"
   },
   "dependencies": {
     "@ai-sdk/provider": "2.0.0-beta.1",
@@ -105,6 +102,8 @@
     "@biomejs/biome": "1.9.4",
     "@playwright/test": "^1.50.1",
     "@tailwindcss/typography": "^0.5.15",
+    "@testing-library/react": "^14.3.1",
+    "@testing-library/user-event": "^14.5.1",
     "@types/d3-scale": "^4.0.8",
     "@types/node": "^22.8.6",
     "@types/papaparse": "^5.3.15",

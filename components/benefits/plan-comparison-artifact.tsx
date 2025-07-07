@@ -86,7 +86,7 @@ export function PlanComparisonArtifact({
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {plans.map((plan) => {
-          const costs = calculateAnnualCost(plan, userProfile?.familySize ?? undefined);
+          const costs = calculateAnnualCost(plan, userProfile?.familySize || 1);
           const score = getPlanRecommendationScore(plan, userProfile);
           const isSelected = selectedPlan === plan.id;
           

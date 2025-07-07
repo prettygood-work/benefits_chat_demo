@@ -28,7 +28,6 @@ import {
   Filter,
   Calendar
 } from 'lucide-react';
-import { DatePickerWithRange } from '@/components/ui/date-range-picker';
 
 interface AnalyticsData {
   totalConversations: number;

@@ -17,7 +17,7 @@ This document provides file-by-file instructions for implementing the Benefits A
 pnpm add @azure/search-documents
 
 # Install testing dependencies (if needed)
-pnpm add -D @testing-library/react @testing-library/jest-dom jest jest-environment-jsdom
+// ...existing code...
 
 # Generate and run database migrations (after schema changes)
 pnpm db:generate
@@ -1204,10 +1204,10 @@ export async function GET(request: NextRequest) {
 
 **Task:** Create comprehensive test suite for benefits functionality.
 
-**Copilot Prompt:** "Create Jest/React Testing Library tests for plan comparison and cost calculation logic"
+// ...existing code...
 
 ```typescript
-import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
+// ...existing code...
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { PlanComparisonArtifact } from '@/components/benefits/plan-comparison-artifact';
 import { searchBenefitsContent, formatSearchResultsForPrompt } from '@/lib/azure-search';

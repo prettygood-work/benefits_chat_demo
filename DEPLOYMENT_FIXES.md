@@ -107,7 +107,7 @@ export function register() {
 - Export functionality and insights
 
 ### ✅ Phase 6: Testing & Deployment
-- Unit tests with Jest
+// ...existing code...
 - Integration tests for API routes
 - E2E tests with Playwright
 - CI/CD pipeline with GitHub Actions

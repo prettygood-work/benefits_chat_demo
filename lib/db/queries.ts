@@ -729,3 +729,118 @@ export async function getAnalyticsEventsByClientId(
     );
   }
 }
+
+// Additional Benefits Query Functions
+
+export async function getBenefitsPlansByType(clientId: string, planType: 'HMO' | 'PPO' | 'HDHP' | 'EPO') {
+  try {
+    return await db
+      .select()
+      .from(benefitsPlans)
+      .where(
+        and(
+          eq(benefitsPlans.clientId, clientId),
+          eq(benefitsPlans.type, planType)
+        )
+      )
+      .orderBy(asc(benefitsPlans.name));
+  } catch (error) {
+    throw new ChatSDKError(
+      'bad_request:database',
+      'Failed to get benefits plans by type',
+    );
+  }
+}
+
+export async function getBenefitsPlanById(planId: string) {
+  try {
+    const [plan] = await db
+      .select()
+      .from(benefitsPlans)
+      .where(eq(benefitsPlans.id, planId))
+      .limit(1);
+    return plan;
+  } catch (error) {
+    throw new ChatSDKError(
+      'bad_request:database',
+      'Failed to get benefits plan by id',
+    );
+  }
+}
+
+export async function updateUserProfile(sessionId: string, updates: Partial<Omit<UserProfile, 'id' | 'sessionId' | 'updatedAt'>>) {
+  try {
+    const [updated] = await db
+      .update(userProfiles)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(userProfiles.sessionId, sessionId))
+      .returning();
+    return updated;
+  } catch (error) {
+    throw new ChatSDKError(
+      'bad_request:database',
+      'Failed to update user profile',
+    );
+  }
+}
+
+export async function getAnalyticsEventsBySessionId(sessionId: string, limit: number = 50) {
+  try {
+    return await db
+      .select()
+      .from(analyticsEvents)
+      .where(eq(analyticsEvents.sessionId, sessionId))
+      .orderBy(desc(analyticsEvents.timestamp))
+      .limit(limit);
+  } catch (error) {
+    throw new ChatSDKError(
+      'bad_request:database',
+      'Failed to get analytics events by session id',
+    );
+  }
+}
+
+export async function getAllClientConfigs() {
+  try {
+    return await db
+      .select()
+      .from(clientConfigs)
+      .orderBy(asc(clientConfigs.name));
+  } catch (error) {
+    throw new ChatSDKError(
+      'bad_request:database',
+      'Failed to get all client configs',
+    );
+  }
+}
+
+export async function updateClientConfig(id: string, updates: Partial<Omit<ClientConfig, 'id' | 'createdAt'>>) {
+  try {
+    const [updated] = await db
+      .update(clientConfigs)
+      .set(updates)
+      .where(eq(clientConfigs.id, id))
+      .returning();
+    return updated;
+  } catch (error) {
+    throw new ChatSDKError(
+      'bad_request:database',
+      'Failed to update client config',
+    );
+  }
+}
+
+export async function deleteBenefitsPlan(planId: string) {
+  try {
+    const [deleted] = await db
+      .delete(benefitsPlans)
+      .where(eq(benefitsPlans.id, planId))
+      .returning();
+    return deleted;
+  } catch (error) {
+    throw new ChatSDKError(
+      'bad_request:database',
+      'Failed to delete benefits plan',
+    );
+  }
+}
