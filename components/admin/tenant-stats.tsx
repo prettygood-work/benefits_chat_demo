@@ -10,11 +10,11 @@ interface TenantStatsProps {
   totalChats?: number;
 }
 
-export function TenantStats({ 
-  totalTenants, 
-  userTenants, 
+export function TenantStats({
+  totalTenants,
+  userTenants,
   activeTenants = 0,
-  totalChats = 0 
+  totalChats = 0,
 }: TenantStatsProps) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -26,13 +26,13 @@ export function TenantStats({
         <CardContent>
           <div className="text-2xl font-bold">{totalTenants}</div>
           <p className="text-xs text-muted-foreground">
-            {activeTenants > 0 
+            {activeTenants > 0
               ? `${activeTenants} active tenants`
               : `Across the platform`}
           </p>
         </CardContent>
       </Card>
-      
+
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle className="text-sm font-medium">Your Tenants</CardTitle>
@@ -40,12 +40,10 @@ export function TenantStats({
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{userTenants}</div>
-          <p className="text-xs text-muted-foreground">
-            Tenants you manage
-          </p>
+          <p className="text-xs text-muted-foreground">Tenants you manage</p>
         </CardContent>
       </Card>
-      
+
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle className="text-sm font-medium">Total Chats</CardTitle>
@@ -53,12 +51,10 @@ export function TenantStats({
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{totalChats}</div>
-          <p className="text-xs text-muted-foreground">
-            Across all tenants
-          </p>
+          <p className="text-xs text-muted-foreground">Across all tenants</p>
         </CardContent>
       </Card>
-      
+
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle className="text-sm font-medium">Analytics</CardTitle>
@@ -67,7 +63,10 @@ export function TenantStats({
         <CardContent>
           <div className="text-2xl font-bold">View</div>
           <p className="text-xs text-muted-foreground">
-            <a href="/admin/analytics" className="text-blue-500 hover:underline">
+            <a
+              href="/admin/analytics"
+              className="text-blue-500 hover:underline"
+            >
               See detailed analytics
             </a>
           </p>

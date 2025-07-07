@@ -8,21 +8,21 @@ const tenantCache = new LRUCache<string, Tenant>({
 });
 
 export async function getCachedTenantBySlug(
-  slug: string, 
-  fetcher: () => Promise<Tenant | null>
+  slug: string,
+  fetcher: () => Promise<Tenant | null>,
 ): Promise<Tenant | null> {
   const cacheKey = `tenant:slug:${slug}`;
-  
+
   // Check cache first
   const cached = tenantCache.get(cacheKey);
   if (cached) return cached;
-  
+
   // If not in cache, fetch and store
   const tenant = await fetcher();
   if (tenant) {
     tenantCache.set(cacheKey, tenant);
   }
-  
+
   return tenant;
 }
 

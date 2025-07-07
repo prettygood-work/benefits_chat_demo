@@ -1,13 +1,20 @@
 import { compare } from 'bcrypt-ts';
 import NextAuth, { type DefaultSession } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
-import { createGuestUser, getUser, userCanAccessTenant } from '@/lib/db/queries';
+import {
+  createGuestUser,
+  getUser,
+  userCanAccessTenant,
+} from '@/lib/db/queries';
 import { authConfig } from './auth.config';
 import { DUMMY_PASSWORD } from '@/lib/constants';
 import type { DefaultJWT } from 'next-auth/jwt';
 import { db } from '@/lib/db';
 import { and, eq } from 'drizzle-orm';
-import { tenantUser, type TenantUser as TenantUserSchema } from '@/lib/db/schema';
+import {
+  tenantUser,
+  type TenantUser as TenantUserSchema,
+} from '@/lib/db/schema';
 
 export type UserType = 'guest' | 'regular';
 
@@ -134,8 +141,8 @@ export async function getTenantAuth(tenantId?: string) {
     .where(
       and(
         eq(tenantUser.tenantId, tenantId),
-        eq(tenantUser.userId, session.user.id)
-      )
+        eq(tenantUser.userId, session.user.id),
+      ),
     )
     .limit(1);
 

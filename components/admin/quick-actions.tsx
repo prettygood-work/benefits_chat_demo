@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Plus, Upload, RefreshCw, Download } from "lucide-react";
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Plus, Upload, RefreshCw, Download } from 'lucide-react';
 
 export function QuickActions() {
   return (

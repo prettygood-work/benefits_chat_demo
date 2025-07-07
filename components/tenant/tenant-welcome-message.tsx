@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { AnimatePresence, motion } from "framer-motion";
-import Image from "next/image";
-import type { Tenant } from "@/lib/db/schema";
+import { AnimatePresence, motion } from 'framer-motion';
+import Image from 'next/image';
+import type { Tenant } from '@/lib/db/schema';
 
 interface TenantWelcomeMessageProps {
   tenant: Tenant;
@@ -21,16 +21,16 @@ export function TenantWelcomeMessage({ tenant }: TenantWelcomeMessageProps) {
         <div className="rounded-lg border bg-background p-8">
           <div className="flex flex-col items-center text-center">
             {tenant.settings.branding.logo && (
-                <Image
-                  src={tenant.settings.branding.logo}
-                  alt={tenant.settings.branding.companyName}
-                  className="h-16 w-auto object-contain"
-                  height={64}
-                  width={256}
-                  style={{ height: "4rem", width: "auto" }}
-                  priority
-                  unoptimized={false}
-                />
+              <Image
+                src={tenant.settings.branding.logo}
+                alt={tenant.settings.branding.companyName}
+                className="h-16 w-auto object-contain"
+                height={64}
+                width={256}
+                style={{ height: '4rem', width: 'auto' }}
+                priority
+                unoptimized={false}
+              />
             )}
             <h1 className="text-2xl font-bold tracking-tight">
               Welcome to {tenant.settings.branding.companyName}

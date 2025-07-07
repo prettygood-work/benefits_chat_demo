@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -49,7 +49,7 @@ export function TenantChatHeader({ tenant, user }: TenantChatHeaderProps) {
           )}
         </div>
       </div>
-      
+
       <div className="flex items-center gap-2">
         {user ? (
           <div className="flex items-center gap-2">

@@ -4,10 +4,16 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import type { Tenant } from '@/lib/db/schema';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -37,7 +43,7 @@ export function TenantList({ tenants, showOwner = false }: TenantListProps) {
       </Card>
     );
   }
-  
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       {tenants.map((tenant) => (
@@ -45,14 +51,13 @@ export function TenantList({ tenants, showOwner = false }: TenantListProps) {
           <CardHeader className="pb-4">
             <div className="flex items-start justify-between">
               <div className="space-y-1">
-                <CardTitle className="text-xl">
-                  {tenant.name}
-                </CardTitle>
+                <CardTitle className="text-xl">{tenant.name}</CardTitle>
                 <CardDescription>
-                  {tenant.slug}.{process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'example.com'}
+                  {tenant.slug}.
+                  {process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'example.com'}
                 </CardDescription>
               </div>
-              
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon">
@@ -73,7 +78,7 @@ export function TenantList({ tenants, showOwner = false }: TenantListProps) {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <a 
+                    <a
                       href={`${window.location.protocol}//${tenant.slug}.${window.location.host.replace(/^[^.]+\./, '')}`}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -86,27 +91,29 @@ export function TenantList({ tenants, showOwner = false }: TenantListProps) {
               </DropdownMenu>
             </div>
           </CardHeader>
-          
+
           <CardContent>
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Status</span>
-              <Badge variant={tenant.status === 'active' ? 'default' : 'secondary'}>
+              <Badge
+                variant={tenant.status === 'active' ? 'default' : 'secondary'}
+              >
                 {tenant.status}
               </Badge>
             </div>
-            
+
             {tenant.userRole && (
               <div className="flex items-center justify-between text-sm mt-2">
                 <span className="text-muted-foreground">Your Role</span>
                 <Badge variant="outline">{tenant.userRole}</Badge>
               </div>
             )}
-            
+
             <div className="flex items-center justify-between text-sm mt-2">
               <span className="text-muted-foreground">Created</span>
               <span>{format(new Date(tenant.createdAt), 'MMM d, yyyy')}</span>
             </div>
-            
+
             {tenant.settings.branding.tagline && (
               <p className="text-sm text-muted-foreground mt-3 italic">
                 &quot;{tenant.settings.branding.tagline}&quot;

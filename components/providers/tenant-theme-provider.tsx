@@ -8,12 +8,15 @@ interface TenantThemeProviderProps {
   children: React.ReactNode;
 }
 
-export function TenantThemeProvider({ tenant, children }: TenantThemeProviderProps) {
+export function TenantThemeProvider({
+  tenant,
+  children,
+}: TenantThemeProviderProps) {
   useEffect(() => {
     // Apply tenant theme colors as CSS variables
     const root = document.documentElement;
     const colors = tenant.settings.theme.colors;
-    
+
     // Set color variables
     root.style.setProperty('--tenant-primary', colors.primary);
     root.style.setProperty('--tenant-secondary', colors.secondary);
@@ -25,46 +28,62 @@ export function TenantThemeProvider({ tenant, children }: TenantThemeProviderPro
     root.style.setProperty('--tenant-card', colors.card);
     root.style.setProperty('--tenant-card-foreground', colors.cardForeground);
     root.style.setProperty('--tenant-border', colors.border);
-    
+
     // Set font variables
-    root.style.setProperty('--tenant-font-sans', tenant.settings.theme.fonts.sans);
-    root.style.setProperty('--tenant-font-mono', tenant.settings.theme.fonts.mono);
-    
+    root.style.setProperty(
+      '--tenant-font-sans',
+      tenant.settings.theme.fonts.sans,
+    );
+    root.style.setProperty(
+      '--tenant-font-mono',
+      tenant.settings.theme.fonts.mono,
+    );
+
     // Set other theme properties
     root.style.setProperty('--tenant-radius', tenant.settings.theme.radius);
-    
+
     // Add tenant class for CSS targeting
     root.classList.add('tenant-themed');
     root.setAttribute('data-tenant-id', tenant.id);
     root.setAttribute('data-tenant-slug', tenant.slug);
-    
+
     // Update favicon
-    const favicon = document.querySelector("link[rel*='icon']") as HTMLLinkElement;
+    const favicon = document.querySelector(
+      "link[rel*='icon']",
+    ) as HTMLLinkElement;
     if (favicon && tenant.settings.branding.favicon) {
       favicon.href = tenant.settings.branding.favicon;
     }
-    
+
     // Cleanup function
     return () => {
       root.classList.remove('tenant-themed');
       root.removeAttribute('data-tenant-id');
       root.removeAttribute('data-tenant-slug');
-      
+
       // Remove CSS variables
       const cssVars = [
-        '--tenant-primary', '--tenant-secondary', '--tenant-accent',
-        '--tenant-background', '--tenant-foreground', '--tenant-muted',
-        '--tenant-muted-foreground', '--tenant-card', '--tenant-card-foreground',
-        '--tenant-border', '--tenant-font-sans', '--tenant-font-mono',
-        '--tenant-radius'
+        '--tenant-primary',
+        '--tenant-secondary',
+        '--tenant-accent',
+        '--tenant-background',
+        '--tenant-foreground',
+        '--tenant-muted',
+        '--tenant-muted-foreground',
+        '--tenant-card',
+        '--tenant-card-foreground',
+        '--tenant-border',
+        '--tenant-font-sans',
+        '--tenant-font-mono',
+        '--tenant-radius',
       ];
-      
-      cssVars.forEach(varName => {
+
+      cssVars.forEach((varName) => {
         root.style.removeProperty(varName);
       });
     };
   }, [tenant]);
-  
+
   return (
     <>
       <style jsx global>{`

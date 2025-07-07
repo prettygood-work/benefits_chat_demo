@@ -26,9 +26,14 @@ export async function middleware(request: NextRequest) {
 
   const subdomain = getSubdomain(hostname);
 
-  // Use getSubdomain and then, if valid, rewrite URL as: 
+  // Use getSubdomain and then, if valid, rewrite URL as:
   // url.pathname = `/t/${subdomain}${pathname}`;
-  if (subdomain && subdomain !== 'www' && subdomain !== 'admin' && subdomain !== 'app') {
+  if (
+    subdomain &&
+    subdomain !== 'www' &&
+    subdomain !== 'admin' &&
+    subdomain !== 'app'
+  ) {
     url.pathname = `/t/${subdomain}${pathname}`;
     return NextResponse.rewrite(url);
   }
@@ -47,12 +52,16 @@ export async function middleware(request: NextRequest) {
 
   const token = await getToken({
     req: request,
-    secret: process.env.AUTH_SECRET || (isDevelopmentEnvironment ? 'development-secret-key' : undefined),
+    secret:
+      process.env.AUTH_SECRET ||
+      (isDevelopmentEnvironment ? 'development-secret-key' : undefined),
     secureCookie: !isDevelopmentEnvironment,
   });
 
   if (isDevelopmentEnvironment && !process.env.AUTH_SECRET) {
-    console.warn('AUTH_SECRET is not defined. Using fallback for development only.');
+    console.warn(
+      'AUTH_SECRET is not defined. Using fallback for development only.',
+    );
   }
 
   if (!token) {
